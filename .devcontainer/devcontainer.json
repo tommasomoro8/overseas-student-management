@@ -1,0 +1,26 @@
+{
+  "name": "TAW Full-Stack Environment",
+  
+  // Indica a VS Code di usare il file docker-compose presente nella root
+  "dockerComposeFile": ["../docker-compose.yml"],
+  
+  // Scegli il backend come container principale in cui infilare VS Code
+  "service": "backend",
+  
+  // La cartella dentro al container in cui VS Code deve aprirsi
+  "workspaceFolder": "/workspace",
+
+  // Configura le estensioni utili che si attiveranno solo quando sei dentro Docker
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "angular.ng-template",      // Suggerimenti e autocompletamento per Angular
+        "dbaeumer.vscode-eslint",    // Controllo errori di sintassi
+        "esbenp.prettier-vscode"     // Formattazione automatica del codice al salvataggio
+      ]
+    }
+  },
+
+  // Impedisce al container di spegnersi subito dopo l'avvio di Docker Compose
+  "overrideCommand": true // CMD ["npm", "run", "dev"] non viene eseguito e il container rimane attivo 
+}

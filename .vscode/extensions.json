@@ -1,0 +1,9 @@
+{
+  "recommendations": [
+    "dbaeumer.vscode-eslint",
+    "esbenp.prettier-vscode",
+    "angular.ng-template",
+
+    "ms-azuretools.vscode-docker", // non serve dentro al container, ma è utile per gestire i container da VS Code
+  ]
+}

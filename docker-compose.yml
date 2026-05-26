@@ -1,53 +1,52 @@
-version: "3.9"
-
 services:
     database:
         image: postgres:16
-        container_name: taw_postgres
+        container_name: taw_database
         environment:
-            POSTGRES_USER: ${DB_USER:-admin}
-            POSTGRES_PASSWORD: ${DB_PASSWORD:-password}
-            POSTGRES_DB: ${DB_NAME:-overseas_database}
+            POSTGRES_USER: user
+            POSTGRES_PASSWORD: password
+            POSTGRES_DB: mydatabase
         ports:
             - "5432:5432"
         volumes:
-            - postgres_data:/var/lib/postgresql/data
-        networks:
-            - app-network
+            - pgdata:/var/lib/postgresql/data
+        restart: unless-stopped
 
     backend:
-        build: ./backend
+        build: 
+            context: ./backend
+            target: development # CAMBIA IN PROD
         container_name: taw_backend
+        environment:
+            - PORT=3000
+            - DB_HOST=database
+            - DB_PORT=5432
+            - DB_USER=user
+            - DB_PASSWORD=password
+            - DB_NAME=mydatabase 
         ports:
             - "3000:3000"
-        environment:
-            PORT: 3000
-            DATABASE_URL: postgresql://${DB_USER:-admin}:${DB_PASSWORD:-password}@database:5432/${DB_NAME:-overseas_database}
-            JWT_SECRET: ${JWT_SECRET:-key_for_local_development}
+        volumes:                # CANCELLA IN PROD
+            - ./:/workspace     # 👈 1. Aggiungi questa: specchia tutta la root del progetto
+            - ./backend:/app    # collega /backend (la cartella del progetto) a /app (la cartella dentro il container creata da WORKDIR /app nel Dockerfile)
+            - /app/node_modules # ma node_modules rimane isolato
         depends_on:
             - database
-        volumes:
-            - ./backend:/app
-            - /app/node_modules
-        networks:
-            - app-network
+        restart: unless-stopped
 
-    frontend:
-        build: ./frontend
-        container_name: taw_frontend
-        ports:
-            - "4200:4200"
-        depends_on:
-            - backend
-        volumes:
-            - ./frontend:/app
-            - /app/node_modules
-        networks:
-            - app-network
+    # frontend:
+    #     build: 
+    #         context: ./frontend
+    #         target: development
+    #     container_name: taw_frontend
+    #     ports:
+    #         - "80:80"
+    #     volumes:
+    #         - ./frontend:/app             # Specchia il codice Angular
+    #         - /app/node_modules           # Isola i pacchetti Linux
+    #     depends_on:
+    #         - backend
+    #     restart: unless-stopped
 
 volumes:
-    postgres_data:
-
-networks:
-    app-network:
-        driver: bridge
+    pgdata:

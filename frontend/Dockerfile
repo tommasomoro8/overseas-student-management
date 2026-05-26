@@ -1,32 +1,23 @@
-# --- Stage 1: Build dell'app Angular ---
-FROM node:20 AS builder
-
+# --- STAGE 1: Base comune ---
+FROM node:20-alpine AS base
 WORKDIR /app
-
-# Copia i file delle dipendenze
 COPY package*.json ./
-
-# Installa le dipendenze di Angular
 RUN npm install
-
-# Copia il codice sorgente
 COPY . .
 
-# Compila l'app Angular per la produzione
+# --- STAGE 2: Target per lo Sviluppo (Dev) ---
+FROM base AS development
+EXPOSE 4200
+# Avvia il server di sviluppo di Angular accessibile dall'esterno del container
+CMD ["npx", "ng", "serve", "--host", "0.0.0.0"]
+
+# --- STAGE 3: Target per la Produzione (Prod) ---
+FROM base AS production
 RUN npm run build --configuration=production
 
-# --- Stage 2: Serve con Nginx ---
 FROM nginx:alpine
-
-# Rimuovi la pagina di default di nginx
-RUN rm -rf /usr/share/nginx/html/*
-
-# Copia la build generata dallo Stage 1 (cambia "nome-tuo-progetto" con il nome effettivo generato nella cartella dist)
-COPY --from=builder /app/dist/nome-tuo-progetto/browser /usr/share/nginx/html
-
-# Copia la configurazione personalizzata di Nginx (se ne hai creata una, vedi nota sotto)
-# COPY nginx.conf /etc/nginx/conf.d/default.conf
-
+# Copia i file statici compilati nell'immagine Nginx
+# NOTA: Verifica se la cartella di build di Angular 17+ è dist/frontend/browser
+COPY --from=production /app/dist/frontend/browser /usr/share/nginx/html
 EXPOSE 80
-
 CMD ["nginx", "-g", "daemon off;"]
