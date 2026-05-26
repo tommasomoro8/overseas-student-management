@@ -1,0 +1,53 @@
+version: "3.9"
+
+services:
+    database:
+        image: postgres:16
+        container_name: taw_postgres
+        environment:
+            POSTGRES_USER: ${DB_USER:-admin}
+            POSTGRES_PASSWORD: ${DB_PASSWORD:-password}
+            POSTGRES_DB: ${DB_NAME:-overseas_database}
+        ports:
+            - "5432:5432"
+        volumes:
+            - postgres_data:/var/lib/postgresql/data
+        networks:
+            - app-network
+
+    backend:
+        build: ./backend
+        container_name: taw_backend
+        ports:
+            - "3000:3000"
+        environment:
+            PORT: 3000
+            DATABASE_URL: postgresql://${DB_USER:-admin}:${DB_PASSWORD:-password}@database:5432/${DB_NAME:-overseas_database}
+            JWT_SECRET: ${JWT_SECRET:-key_for_local_development}
+        depends_on:
+            - database
+        volumes:
+            - ./backend:/app
+            - /app/node_modules
+        networks:
+            - app-network
+
+    frontend:
+        build: ./frontend
+        container_name: taw_frontend
+        ports:
+            - "4200:4200"
+        depends_on:
+            - backend
+        volumes:
+            - ./frontend:/app
+            - /app/node_modules
+        networks:
+            - app-network
+
+volumes:
+    postgres_data:
+
+networks:
+    app-network:
+        driver: bridge

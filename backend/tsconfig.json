@@ -1,0 +1,22 @@
+{
+  "compilerOptions": {
+    /* File Layout */
+    "rootDir": "./src",                          // Dice a TS dove cercare i file sorgente (.ts)
+    "outDir": "./dist",                          // Dice a TS dove salvare i file compilati (.js)
+
+    /* Environment Settings */
+    "target": "es2022",                          // Genera JS moderno supportato da Node.js recente
+    "module": "commonjs",                        // Standard più comune e robusto per Express/Node tradizionale
+
+    /* Interoperabilità e Controlli */
+    "esModuleInterop": true,                     // Permette di usare "import express from 'express'" senza problemi
+    "forceConsistentCasingInFileNames": true,    // Evita bug strani tra sistemi operativi (es. Windows vs Mac)
+    "skipLibCheck": true,                        // Salta il controllo dei tipi dei pacchetti in node_modules (velocizza la compilazione)
+
+    /* Stricter Typechecking Options */
+    "strict": true,                              // Attiva tutti i controlli severi sui tipi (consigliatissimo)
+    "noUncheckedIndexedAccess": true,            // Opzione eccellente che avevi già: rende più sicuri gli accessi agli array/oggetti
+    "exactOptionalPropertyTypes": true           // Evita di confondere proprietà indefinite con proprietà mancanti
+  },
+  "include": ["src/**/*"]                        // Dice a TS di considerare solo i file dentro la cartella src
+}
