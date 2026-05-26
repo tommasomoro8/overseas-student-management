@@ -1,5 +1,5 @@
 # Usa un'immagine Node.js
-FROM node:20
+FROM node:20 AS base
 
 # Imposta la directory di lavoro nel container
 WORKDIR /app
@@ -13,11 +13,18 @@ RUN npm install
 # Copia il resto del codice sorgente
 COPY . .
 
-# Compila il progetto TypeScript (assicurati di avere uno script "build": "tsc" nel package.json)
-RUN npm run build
 
-# Esponi la porta
+# --- STAGE 2: Target per lo Sviluppo (Dev) ---
+FROM base AS development
 EXPOSE 3000
+# Avvia con nodemon configurato nel package.json
+CMD ["npm", "run", "dev"]
 
-# Avvia l'applicazione (assicurati che lo script "start" punti a "node dist/index.js" o simile)
+
+# --- STAGE 3: Target per la Produzione (Prod) ---
+FROM base AS production
+# Compila il codice TypeScript usando 'tsc'
+RUN npm run build
+EXPOSE 3000
+# Avvia l'applicazione JavaScript compilata da dist/index.js
 CMD ["npm", "start"]
