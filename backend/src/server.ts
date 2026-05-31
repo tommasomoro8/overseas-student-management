@@ -1,82 +1,30 @@
-import express, { Request, Response } from 'express';
-import { Pool } from 'pg';
-import cors from 'cors';
-import dotenv from 'dotenv';
+import { env } from './config/env';
+import { pool } from './config/db';
+import { createApp } from './app';
+import { initDb } from './db/schema';
+import { seedDatabase } from './db/seed';
 
-// Carica le variabili d'ambiente dal file .env se presente (utile per lo sviluppo locale fuori da Docker)
-dotenv.config();
-
-const app = express();
-const port = process.env.PORT || 3000;
-
-// Middleware
-app.use(cors());
-app.use(express.json());
-
-// Configurazione del Pool di connessione a PostgreSQL
-// Docker passerà automaticamente queste variabili d'ambiente tramite il docker-compose.yml
-const pool = new Pool({
-  host: process.env.DB_HOST || 'localhost',
-  port: parseInt(process.env.DB_PORT || '5432'),
-  user: process.env.DB_USER || 'user',
-  password: process.env.DB_PASSWORD || 'password',
-  database: process.env.DB_NAME || 'mydatabase',
-});
-
-async function seedDatabase() {
+/**
+ * Punto di ingresso del backend.
+ * 1. Inizializza lo schema del database.
+ * 2. (Opzionale) precarica gli utenti di test.
+ * 3. Avvia il server Express.
+ */
+async function startServer(): Promise<void> {
     try {
-        // Test di connessione
-        await pool.query('SELECT NOW()');
-        console.log("🔌 Connessione al database stabilita con successo!");
+        await initDb();
 
-        // Creazione della tabella (DDL)
-        await pool.query(`
-            CREATE TABLE IF NOT EXISTS film_cinema (
-                id SERIAL PRIMARY KEY,
-                titolo VARCHAR(100) NOT NULL,
-                regista VARCHAR(100),
-                sala INT,
-                in_programmazione BOOLEAN DEFAULT TRUE
-            );
-        `);
-        console.log("✅ Tabella 'film_cinema' verificata/creata.");
+        if (env.SEED) await seedDatabase();
 
-        // Controllo quanti record ci sono
-        const check = await pool.query('SELECT COUNT(*) FROM film_cinema');
-        
-        // Se la tabella è vuota, inseriamo i dati fittizi (DML)
-        if (parseInt(check.rows[0].count) === 0) {
-            await pool.query(`
-                INSERT INTO film_cinema (titolo, regista, sala, in_programmazione) VALUES 
-                ('Interstellar', 'Christopher Nolan', 1, TRUE),
-                ('The Matrix', 'Lana & Lilly Wachowski', 2, FALSE),
-                ('Dune - Parte Due', 'Denis Villeneuve', 3, TRUE),
-                ('Pulp Fiction', 'Quentin Tarantino', 1, FALSE);
-            `);
-            console.log("🍿 Dati fittizi inseriti con successo!");
-        } else {
-            console.log("ℹ️ La tabella contiene già dei dati, salto l'inserimento.");
-        }
-
-    } catch (error) {
-        console.error("❌ Errore durante l'inizializzazione del database:", error);
+        const app = createApp();
+        app.listen(env.PORT, () => {
+            console.log(`[server] In ascolto sulla porta ${env.PORT} (NODE_ENV=${env.NODE_ENV})`);
+        });
+    } catch (err) {
+        console.error('[server] Avvio fallito:', err);
+        await pool.end().catch(() => undefined); // chiude la connessione al database in caso di errore, lo ignora
+        process.exit(1); // esce con codice di errore
     }
 }
 
-// Rotta di esempio (Endpoint di test)
-app.get('/api/status', async (req: Request, res: Response) => {
-  try {
-    seedDatabase();
-    res.json({
-      status: 'OK come va?',
-      message: 'Il backend risponde correttamente!'
-    });
-  } catch (err) {
-    res.status(500).json({ status: 'ERROR', message: 'Errore nel recupero dei dati dal DB' });
-  }
-});
-
-// Avvio del server
-app.listen(port, async () => {
-  console.log(`🚀 Server backend in ascolto sulla porta ${port}`);
-});
+(async () => await startServer())();

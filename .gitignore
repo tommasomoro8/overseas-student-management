@@ -2,8 +2,14 @@
 package-lock.json
 node_modules
 
+# Build TypeScript
+dist
+
 # Env
 .env
 
 # MacOS
 .DS_Store
+
+# Claude Code worktrees
+.claude/worktrees/
