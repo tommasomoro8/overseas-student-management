@@ -8,8 +8,11 @@ COPY . .
 # --- STAGE 2: Target per lo Sviluppo (Dev) ---
 FROM base AS development
 EXPOSE 4200
-# Avvia il server di sviluppo di Angular accessibile dall'esterno del container
-CMD ["npx", "ng", "serve", "--host", "0.0.0.0"]
+# Avvia il server di sviluppo di Angular accessibile dall'esterno del container.
+# --poll: il file-watch nativo non è affidabile sui bind mount di Docker su macOS,
+#         quindi si usa il polling. Il proxy /api -> backend è in proxy.conf.js
+#         (collegato in angular.json), così le chiamate al backend funzionano da subito.
+CMD ["npx", "ng", "serve", "--host", "0.0.0.0", "--poll", "2000"]
 
 # --- STAGE 3: Target per la Produzione (Prod) ---
 FROM base AS production

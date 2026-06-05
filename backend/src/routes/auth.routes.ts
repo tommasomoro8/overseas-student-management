@@ -12,6 +12,11 @@ router.post('/login', validateBody(loginSchema), authController.login);
 
 // Rotte protette
 router.get('/me', authenticate, authController.me);
-router.post('/staff', authenticate, authorize('office'), validateBody(createStaffSchema), authController.createStaff);
+router.post('/staff', 
+    authenticate,
+    authorize('office'),
+    validateBody(createStaffSchema),
+    authController.createStaff
+);
 
 export default router;

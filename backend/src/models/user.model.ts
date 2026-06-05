@@ -24,8 +24,8 @@ export interface CreateUserInput {
     matriculationNumber?: string | null;
 }
 
-/** Codice di errore PostgreSQL per violazione di un vincolo UNIQUE. */
-export const UNIQUE_VIOLATION = '23505';
+/** Codice di errore PostgreSQL per violazione di un vincolo UNIQUE (ri-esportato per comodita'). */
+export { UNIQUE_VIOLATION } from '../utils/pgErrors';
 
 /** Cerca un utente per email (usata in login e registrazione). */
 export async function findUserByEmail(email: string): Promise<UserRow | undefined> {
@@ -39,10 +39,25 @@ export async function findUserById(id: number): Promise<UserRow | undefined> {
     return result.rows[0];
 }
 
+/** Elenca tutti gli utenti (tabella piccola): usata per arricchire le domande con i nomi. */
+export async function listUsers(): Promise<UserRow[]> {
+    const result = await query<UserRow>('SELECT * FROM users ORDER BY last_name, first_name');
+    return result.rows;
+}
+
+/** Elenca gli utenti di un dato ruolo (es. i docenti referenti selezionabili). */
+export async function listUsersByRole(role: UserRole): Promise<UserRow[]> {
+    const result = await query<UserRow>(
+        'SELECT * FROM users WHERE role = $1 ORDER BY last_name, first_name',
+        [role],
+    );
+    return result.rows;
+}
+
 /** Inserisce un nuovo utente e restituisce la riga creata. */
 export async function createUser(input: CreateUserInput): Promise<UserRow> {
     const result = await query<UserRow>(
-       `INSERT INTO users (email, password_hash, role, first_name, last_name, matriculation_number)
+        `INSERT INTO users (email, password_hash, role, first_name, last_name, matriculation_number)
         VALUES ($1, $2, $3, $4, $5, $6)
         RETURNING *`,
         [

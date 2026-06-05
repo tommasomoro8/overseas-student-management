@@ -21,3 +21,25 @@ export function validateBody(schema: z.ZodType) {
         next();
     };
 }
+
+/**
+ * Nelle richieste multipart (upload file) i campi testuali arrivano come stringhe.
+ * Questo middleware fa il JSON.parse dei campi indicati (se presenti) prima di
+ * validateBody, cosi' un campo come "examMappings" puo' essere validato come array.
+ * Va inserito DOPO il middleware di upload e PRIMA di validateBody.
+ */
+export function parseJsonFields(...fields: string[]) {
+    return (req: Request, _res: Response, next: NextFunction): void => {
+        for (const field of fields) {
+            const value = req.body?.[field];
+            if (typeof value === 'string' && value.trim() !== '') {
+                try {
+                    req.body[field] = JSON.parse(value);
+                } catch {
+                    return next(new AppError(400, `Campo "${field}": JSON non valido`));
+                }
+            }
+        }
+        next();
+    };
+}

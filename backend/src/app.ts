@@ -2,6 +2,7 @@ import express, { Application, Request, Response } from 'express';
 import cors from 'cors';
 import apiRoutes from './routes';
 import { errorHandler, notFoundHandler } from './middlewares/error.middleware';
+import { realtimeNotifier } from './middlewares/realtime.middleware';
 
 /**
  * Crea e configura l'applicazione Express.
@@ -13,12 +14,15 @@ export function createApp(): Application {
     app.use(cors());
     app.use(express.json());
 
-    // Endpoint di health-check (utile per Docker/monitoraggio).
+    // Endpoint di health-check.
     app.get('/health', (_req: Request, res: Response) => {
         res.json({ status: 'ok' });
     });
 
-    // API applicative (versionate: tutte le rotte vivono sotto /api/v1).
+    // Notifica realtime dopo le mutazioni andate a buon fine (vedi realtime.middleware).
+    app.use(realtimeNotifier);
+
+    // API applicative.
     app.use('/api/v1', apiRoutes);
 
     // 404 + gestione errori.

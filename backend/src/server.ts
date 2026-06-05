@@ -1,8 +1,11 @@
+import http from 'http';
 import { env } from './config/env';
 import { pool } from './config/db';
 import { createApp } from './app';
 import { initDb } from './db/schema';
 import { seedDatabase } from './db/seed';
+import { backfillInstitutionFlags } from './models/institution.model';
+import { initRealtime } from './realtime/realtime';
 
 /**
  * Punto di ingresso del backend.
@@ -13,11 +16,16 @@ import { seedDatabase } from './db/seed';
 async function startServer(): Promise<void> {
     try {
         await initDb();
+        // Popola la bandiera per le istituzioni preesistenti (idempotente).
+        await backfillInstitutionFlags();
 
         if (env.SEED) await seedDatabase();
 
         const app = createApp();
-        app.listen(env.PORT, () => {
+        // Server HTTP esplicito per condividere la porta tra Express e socket.io.
+        const httpServer = http.createServer(app);
+        initRealtime(httpServer);
+        httpServer.listen(env.PORT, () => {
             console.log(`[server] In ascolto sulla porta ${env.PORT} (NODE_ENV=${env.NODE_ENV})`);
         });
     } catch (err) {

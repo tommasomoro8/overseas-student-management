@@ -37,19 +37,22 @@ services:
             - database
         restart: unless-stopped
 
-    # frontend:
-    #     build:
-    #         context: ./frontend
-    #         target: development
-    #     container_name: taw_frontend
-    #     ports:
-    #         - "80:80"
-    #     volumes:
-    #         - ./frontend:/app             # Specchia il codice Angular
-    #         - /app/node_modules           # Isola i pacchetti Linux
-    #     depends_on:
-    #         - backend
-    #     restart: unless-stopped
+    frontend:
+        build:
+            context: ./frontend
+            target: development # cambia in production per servire la build via Nginx
+        container_name: taw_frontend
+        environment:
+            # in dev il proxy di ng serve inoltra /api -> backend (vedi frontend/proxy.conf.js)
+            - BACKEND_URL=http://backend:3000
+        ports:
+            - '4200:4200' # ng serve (dev). Con target production usare '80:80'
+        volumes: # CANCELLA IN PROD
+            - ./frontend:/app # specchia il codice Angular
+            - /app/node_modules # ma node_modules (Linux) resta isolato
+        depends_on:
+            - backend
+        restart: unless-stopped
 
 volumes:
     pgdata:

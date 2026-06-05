@@ -48,6 +48,10 @@ export const env = {
     JWT_EXPIRES_IN: process.env.JWT_EXPIRES_IN ?? '7d',
     BCRYPT_ROUNDS: Number(process.env.BCRYPT_ROUNDS ?? '10'),
 
+    // Upload file (PDF Learning Agreement / Transcript of Records)
+    UPLOAD_DIR: getEnv('UPLOAD_DIR', 'uploads'),
+    MAX_UPLOAD_BYTES: Number(getEnv('MAX_UPLOAD_BYTES', '10485760')), // 10 MB
+
     // Se true, all'avvio precarica gli utenti di test (richiesto dalla specifica)
     SEED: (process.env.SEED ?? 'true') !== 'false',
 } as const;
