@@ -67,7 +67,7 @@ import { IconComponent } from '../ui/icon.component';
                     </form>
 
                     <div class="login-hint">
-                        Utenti demo: studente&#64;unive.it · docente&#64;unive.it ·office&#64;unive.it
+                        Utenti demo: studente&#64;unive.it · docente&#64;unive.it · office&#64;unive.it
                     </div>
                 </div>
             </div>

@@ -1,6 +1,5 @@
 /* ===========================================================================
-   Overseas Mobility — Modal (port of ui.jsx Modal)
-   Body is the default slot; footer buttons go in <... modalFooter>.
+   Overseas Mobility — Modal
    =========================================================================== */
 import {
     ChangeDetectionStrategy,

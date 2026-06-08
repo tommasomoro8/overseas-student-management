@@ -1,6 +1,5 @@
 /* ===========================================================================
-   Overseas Mobility — detail cards (port of detail.jsx MetaBar/DocsCard/
-   ModsCard/DatesCard + the Box callout wrapper)
+   Overseas Mobility — detail cards
    =========================================================================== */
 import { ChangeDetectionStrategy, Component, Input, inject } from '@angular/core';
 import { Application, Role } from '../../core/models';

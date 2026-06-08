@@ -1,5 +1,5 @@
 /* ===========================================================================
-   Overseas Mobility — Badge + ActionBadge (port of ui.jsx)
+   Overseas Mobility — Badge + ActionBadge
    =========================================================================== */
 import { ChangeDetectionStrategy, Component, Input, computed, input } from '@angular/core';
 import { Application, Role } from '../core/models';

@@ -1,6 +1,5 @@
 /* ===========================================================================
-   Overseas Mobility — button (port of ui.jsx Btn)
-   Attribute selector on a real <button> so native disabled / (click) / style work.
+   Overseas Mobility — button
    =========================================================================== */
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { IconComponent } from './icon.component';

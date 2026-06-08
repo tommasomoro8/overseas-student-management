@@ -248,9 +248,8 @@ export async function closeApplication(applicationId: number): Promise<PublicApp
  * Date effettive di mobilita' (solo studente proprietario):
  *  - da PRE_DEPARTURE_APPROVED                  -> avvia la mobilita' (MOBILITY_IN_PROGRESS):
  *    le date sono obbligatorie per entrare nella fase "during mobility";
- *  - in MOBILITY_IN_PROGRESS o LA_CHANGE_SUBMITTED -> correzione delle date gia' inserite
- *    (es. rientro reale), senza cambiare stato: la modifica resta possibile anche mentre
- *    e' in valutazione una modifica al Learning Agreement.
+ *  - in MOBILITY_IN_PROGRESS, LA_CHANGE_SUBMITTED, TOR_SUBMITTED o TOR_REJECTED -> correzione
+ *    delle date gia' inserite (es. rientro reale), senza cambiare stato.
  */
 export async function insertMobilityDates(
     applicationId: number,
@@ -269,7 +268,12 @@ export async function insertMobilityDates(
             assertTransition(app.status, 'MOBILITY_IN_PROGRESS');
             return enterMobilityInProgress(client, applicationId, arrivalDate, departureDate);
         }
-        if (app.status === 'MOBILITY_IN_PROGRESS' || app.status === 'LA_CHANGE_SUBMITTED') {
+        if (
+            app.status === 'MOBILITY_IN_PROGRESS' ||
+            app.status === 'LA_CHANGE_SUBMITTED' ||
+            app.status === 'TOR_SUBMITTED' ||
+            app.status === 'TOR_REJECTED'
+        ) {
             return updateMobilityDates(client, applicationId, arrivalDate, departureDate);
         }
         throw new AppError(

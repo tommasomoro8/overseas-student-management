@@ -1,7 +1,7 @@
 # Dalla root del progetto
 
 # --- Sviluppo (hot-reload, dev-server Angular con proxy /api) ---
-docker-compose up --build      # avvia database, backend, frontend
+docker-compose up --build
 # Frontend:  http://localhost:4200
 # Backend:   http://localhost:3000  (health-check: GET /health)
 

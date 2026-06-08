@@ -25,7 +25,7 @@ export interface CreateStaffInput {
     password: string;
     firstName: string;
     lastName: string;
-    role: Extract<UserRole, 'lecturer' | 'office'>; // Estrae dal tipo globale UserRole solo i ruoli consentiti per lo staff.
+    role: Extract<UserRole, 'lecturer' | 'office'>;
 }
 
 /** Risultato di registrazione/login: utente pubblico + token di accesso. */
@@ -63,8 +63,6 @@ interface CreateAccountParams {
 
 /** Logica condivisa di creazione account, con controllo email duplicata. */
 async function createAccount(params: CreateAccountParams): Promise<PublicUser> {
-    // L'email viene normalizzata (minuscolo + trim) gia' a livello di validazione,
-    // qui controlliamo l'unicita' in modo esplicito per un messaggio d'errore chiaro.
     const existing = await findUserByEmail(params.email);
     if (existing) {
         throw new AppError(409, "Email gia' registrata");

@@ -7,13 +7,12 @@ import { env } from '../config/env';
 import { AppError } from '../utils/AppError';
 
 // Assicura l'esistenza della cartella di upload all'avvio del modulo.
-fs.mkdirSync(env.UPLOAD_DIR, { recursive: true }); // recursive: true evita errori se la cartella esiste già, e crea eventuali sottocartelle necessarie
+fs.mkdirSync(env.UPLOAD_DIR, { recursive: true });
 
 const storage = multer.diskStorage({
     destination: (_req, _file, cb) => {
         cb(null, env.UPLOAD_DIR);
     },
-    // Nome file generato dal server (UUID): nessun rischio di path traversal o collisione.
     filename: (_req, _file, cb) => {
         cb(null, `${randomUUID()}.pdf`);
     },

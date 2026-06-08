@@ -71,7 +71,7 @@ function laStatus(la: PublicLearningAgreement, appStatus: Status): DocStatus {
     if (la.evaluation) return la.evaluation.decision === 'APPROVED' ? 'approved' : 'rejected';
     if (la.isActive && (appStatus === 'LA_SUBMITTED' || appStatus === 'LA_CHANGE_SUBMITTED'))
         return 'pending';
-    return la.isActive ? 'approved' : 'rejected';
+    return 'approved';
 }
 
 function torStatus(
@@ -81,7 +81,7 @@ function torStatus(
 ): DocStatus {
     if (evaluation) return evaluation.decision === 'APPROVED' ? 'approved' : 'rejected';
     if (isActive && appStatus === 'TOR_SUBMITTED') return 'pending';
-    return isActive ? 'approved' : 'rejected';
+    return 'approved';
 }
 
 /** Posizione corrente nella sequenza canonica di 8 step, per stato. */

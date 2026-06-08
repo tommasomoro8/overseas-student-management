@@ -31,8 +31,8 @@ async function startServer(): Promise<void> {
         });
     } catch (err) {
         console.error('[server] Avvio fallito:', err);
-        await pool.end().catch(() => undefined); // chiude la connessione al database in caso di errore, lo ignora
-        process.exit(1); // esce con codice di errore
+        await pool.end().catch(() => undefined);
+        process.exit(1);
     }
 }
 

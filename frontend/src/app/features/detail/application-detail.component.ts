@@ -1,5 +1,5 @@
 /* ===========================================================================
-   Overseas Mobility — Application detail page (port of detail.jsx)
+   Overseas Mobility — Application detail page
    =========================================================================== */
 import { ChangeDetectionStrategy, Component, Input, inject } from '@angular/core';
 import { Application } from '../../core/models';

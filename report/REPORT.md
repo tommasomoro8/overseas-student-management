@@ -351,20 +351,20 @@ Tutte le API sono esposte sotto il prefisso **`/api/v1`** e scambiano dati in **
 ```json
 // Request
 {
-  "email": "studente@unive.it",
+  "email": "nuovostudente@unive.it",
   "password": "Ciao1234!",
-  "firstName": "Tommaso",
-  "lastName": "Moro",
-  "matriculationNumber": "905964"
+  "firstName": "Giorgia",
+  "lastName": "Manao",
+  "matriculationNumber": "894377"
 }
 ```
 ```json
 // Response 201
 {
   "user": {
-    "id": 7, "email": "studente@unive.it", "role": "student",
-    "firstName": "Tommaso", "lastName": "Moro",
-    "matriculationNumber": "905964", "createdAt": "2026-06-05T10:12:00.000Z"
+    "id": 7, "email": "nuovostudente@unive.it", "role": "student",
+    "firstName": "Giorgia", "lastName": "Manao",
+    "matriculationNumber": "894377", "createdAt": "2026-06-05T10:12:00.000Z"
   },
   "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
 }
@@ -396,7 +396,7 @@ Tutte le API sono esposte sotto il prefisso **`/api/v1`** e scambiano dati in **
 {
   "referentLecturerId": 2,
   "hostInstitutionId": 1,
-  "academicYear": "2025/2026",
+  "academicYear": "2026/2027",
   "expectedPeriod": "FIRST_SEMESTER"
 }
 ```
@@ -405,7 +405,7 @@ Tutte le API sono esposte sotto il prefisso **`/api/v1`** e scambiano dati in **
 {
   "application": {
     "id": 12, "studentId": 7, "referentLecturerId": 2, "hostInstitutionId": 1,
-    "academicYear": "2025/2026", "expectedPeriod": "FIRST_SEMESTER",
+    "academicYear": "2026/2027", "expectedPeriod": "FIRST_SEMESTER",
     "status": "DRAFT", "actualArrivalDate": null, "actualDepartureDate": null,
     "createdAt": "2026-06-05T10:20:00.000Z", "updatedAt": "2026-06-05T10:20:00.000Z"
   }
@@ -641,6 +641,7 @@ I passaggi sono illustrati con screenshot dell'applicazione in esecuzione, ripro
 2. **Nuova application**: sceglie istituzione ospitante, docente referente, anno accademico e periodo → la domanda nasce in stato `DRAFT`.
    ![Wizard di creazione di una nuova application](report-imgs/student-newapplication.png)
 3. **Invio Learning Agreement**: carica il PDF e compila il **mapping esami** (estero ↔ Ca' Foscari) → stato `LA_SUBMITTED`.
+   ![Richiesta del learning agreement](report-imgs/student-la1.png)
    ![Compilazione del mapping esami estero ↔ Ca' Foscari](report-imgs/student-la2.png)
 4. Dopo l'approvazione del docente e la verifica dell'ufficio, **inserisce le date** di arrivo/rientro → la mobilità parte (`MOBILITY_IN_PROGRESS`).
    ![Modale di invio delle date](report-imgs/student-date.png)
@@ -667,22 +668,13 @@ I passaggi sono illustrati con screenshot dell'applicazione in esecuzione, ripro
 3. **Chiude la pratica** quando il Transcript è approvato (`TOR_APPROVED → CLOSED`).
    ![Chiusura della pratica](report-imgs/office-close.png)
 
-> **Realtime in azione:** quando due client hanno aperta la stessa pratica aperta in due finestre, l'azione compiuta da uno aggiorna automaticamente la vista dell'altro grazie alle notifiche Socket.IO.
+> **Realtime in azione:** quando due client hanno la stessa pratica aperta in due finestre, l'azione compiuta da uno aggiorna automaticamente la vista dell'altro grazie alle notifiche Socket.IO.
 
 ---
 
 ## 7. Utilizzo di strumenti di AI
 
-Durante lo sviluppo è stato utilizzato un **assistente AI** (Claude, tramite l'ambiente agentico *Claude Code*) come supporto alla programmazione, con un approccio di tipo *pair-programming*: le decisioni di architettura e di dominio sono rimaste in capo allo sviluppatore, mentre l'AI ha accelerato implementazione, refactoring e documentazione.
-
-**Ambiti di utilizzo**
-
-- **Impostazione dell'architettura a livelli** del backend (routes → middleware → controller → service → model) e definizione delle convenzioni di progetto.
-- **Modellazione del dominio**: definizione della macchina a stati della domanda e delle transizioni ammesse, con la relativa validazione lato server.
-- **Scrittura di codice ripetitivo ma delicato**: query SQL parametrizzate, schemi di validazione Zod, mapper DTO ↔ view-model, gestione idempotente dello schema e delle migrazioni.
-- **Front end Angular**: generazione di componenti standalone, gestione dello stato con Signals e derivazione della timeline/azioni dallo stato del backend.
-- **Robustezza e sicurezza**: suggerimenti su hashing bcrypt, gestione del token JWT, prevenzione di race condition (`SELECT ... FOR UPDATE` in transazione), gestione centralizzata degli errori, upload PDF sicuro (UUID, filtro MIME, limiti).
-- **Documentazione**: commenti esplicativi nel codice e stesura di questo report.
+Durante lo sviluppo del progetto è stato utilizzato un **assistente AI**, Claude Code di Anthropic, come strumento di supporto, impiegato in modo mirato per accelerare le parti più ripetitive del lavoro (boilerplate, codice di contorno, documentazione) a partire da requisiti e decisioni già definiti dallo sviluppatore. Le scelte progettuali e di dominio sono quindi rimaste interamente in capo allo sviluppatore; all'AI è stato delegato principalmente il lavoro di stesura più meccanico, sotto supervisione costante.
 
 **Risultati ottenuti**
 

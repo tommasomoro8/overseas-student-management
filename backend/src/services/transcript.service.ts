@@ -111,7 +111,7 @@ export async function uploadTranscript(
             // I voti si scrivono sui mapping della versione LA attiva: devono coprirli tutti.
             const activeLa = await findActiveLearningAgreementTx(client, applicationId);
             if (!activeLa) {
-                throw new Error('Versione attiva del Learning Agreement mancante');
+                throw new AppError(500, 'Versione attiva del Learning Agreement mancante');
             }
             const mappings = await listExamMappingsForLearningAgreementTx(client, activeLa.id);
             assertResultsMatchMappings(results, mappings);
@@ -153,7 +153,7 @@ export async function getTranscriptForDownload(
 }
 
 /**
- * Valutazione del docente referente (o ufficio) su una specifica versione.
+ * Valutazione del docente referente su una specifica versione.
  * Transizione TOR_SUBMITTED -> TOR_APPROVED | TOR_REJECTED.
  */
 export async function evaluateTranscript(
@@ -181,11 +181,10 @@ export async function evaluateTranscript(
         const target = decision === 'APPROVED' ? 'TOR_APPROVED' : 'TOR_REJECTED';
         assertTransition(app.status, target);
 
-        // Per approvare, tutti gli esami della versione LA attiva devono avere voto e data.
         if (decision === 'APPROVED') {
             const activeLa = await findActiveLearningAgreementTx(client, applicationId);
             if (!activeLa) {
-                throw new Error('Versione attiva del Learning Agreement mancante');
+                throw new AppError(500, 'Versione attiva del Learning Agreement mancante');
             }
             const mappings = await listExamMappingsForLearningAgreementTx(client, activeLa.id);
             const incomplete = mappings.some((m) => !m.score || !m.exam_date);

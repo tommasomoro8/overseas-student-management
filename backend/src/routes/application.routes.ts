@@ -22,10 +22,6 @@ router.post(
     applicationController.create,
 );
 
-
-// learning-agreements vedi sotto-risorse
-
-
 // Approvazione pre-partenza (solo ufficio)
 router.post(
     '/:applicationId/pre-departure-approval',
@@ -40,10 +36,6 @@ router.post(
     validateBody(mobilityDatesSchema),
     applicationController.mobilityDates,
 );
-
-
-// transcript-of-record vedi sotto-risorse
-
 
 // chiusura definitiva (solo ufficio)
 router.post('/:applicationId/close', authorize('office'), applicationController.close);

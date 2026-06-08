@@ -145,8 +145,6 @@ export class StoreService {
         });
     }
 
-    // Iscrizione persistente all'elenco: nuove pratiche/transizioni aggiornano la lista
-    // anche quando non si e' nel dettaglio. Attivata alla prima loadList().
     private ensureListWatch(): void {
         if (this.listWatchCleanup) return;
         this.listWatchCleanup = this.realtime.watchList(() => {

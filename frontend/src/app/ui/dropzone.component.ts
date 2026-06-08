@@ -61,7 +61,6 @@ export class DropzoneComponent {
 
     emitDemo(): void {
         const name = this.sampleName || 'documento_demo.pdf';
-        // PDF minimo: il backend accetta in base a mimetype application/pdf + estensione .pdf.
         const file = new File(['%PDF-1.4\n% Overseas demo document\n'], name, {
             type: 'application/pdf',
         });

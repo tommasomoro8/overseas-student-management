@@ -1,5 +1,5 @@
 /* ===========================================================================
-   Overseas Mobility — ExamTable (port of ui.jsx ExamTable)
+   Overseas Mobility — ExamTable
    =========================================================================== */
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { Exam } from '../core/models';

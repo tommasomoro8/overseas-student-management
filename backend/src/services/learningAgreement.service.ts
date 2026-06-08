@@ -243,7 +243,7 @@ export async function evaluateLearningAgreement(
                     la.version_number,
                 );
                 if (!previous) {
-                    throw new Error('Versione precedente da ripristinare non trovata');
+                    throw new AppError(500, 'Versione precedente da ripristinare non trovata');
                 }
                 await setLearningAgreementActive(client, la.id, false);
                 await setLearningAgreementActive(client, previous.id, true);
