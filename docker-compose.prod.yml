@@ -1,0 +1,56 @@
+# ===========================================================================
+# Stack di PRODUZIONE.
+#  - immagini buildate con i target "production" dei Dockerfile
+#  - frontend servito da Nginx, che fa da reverse proxy verso il backend
+#  - nessun bind-mount del codice (al contrario del docker-compose.yml di dev)
+#  - backend e database NON esposti sull'host: l'unico ingresso è Nginx (:8080)
+#
+# Avvio:   docker-compose -f docker-compose.prod.yml -p taw-prod up --build -d
+# Stop:    docker-compose -f docker-compose.prod.yml -p taw-prod down
+# App:     http://localhost:8080
+# ===========================================================================
+services:
+    database:
+        image: postgres:16
+        container_name: taw_database_prod
+        environment:
+            POSTGRES_USER: user
+            POSTGRES_PASSWORD: password
+            POSTGRES_DB: mydatabase
+        volumes:
+            - pgdata_prod:/var/lib/postgresql/data
+        restart: unless-stopped
+
+    backend:
+        build:
+            context: ./backend
+            target: production
+        container_name: taw_backend_prod
+        environment:
+            - NODE_ENV=production
+            - PORT=3000
+            - DB_HOST=database
+            - DB_PORT=5432
+            - DB_USER=user
+            - DB_PASSWORD=password
+            - DB_NAME=mydatabase
+            - JWT_SECRET=cambia-questo-segreto-in-produzione # cambia!!
+            - JWT_EXPIRES_IN=7d
+            - SEED=true # precarica utenti/istituzioni demo
+        depends_on:
+            - database
+        restart: unless-stopped
+
+    frontend:
+        build:
+            context: ./frontend
+            target: production
+        container_name: taw_frontend_prod
+        ports:
+            - '8080:80' # unico ingresso pubblico: Nginx
+        depends_on:
+            - backend
+        restart: unless-stopped
+
+volumes:
+    pgdata_prod:

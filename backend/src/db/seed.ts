@@ -17,9 +17,12 @@ interface SeedInstitution {
     country: string;
     city: string;
     erasmusCode: string;
+    /** Bandiera opzionale: se omessa viene derivata dal paese in fase di insert. */
+    flag?: string;
 }
 
 // Alcune istituzioni ospitanti di esempio per popolare il flusso delle domande.
+// La bandiera puo' essere indicata esplicitamente; se omessa la deriva countryFlag().
 const SEED_INSTITUTIONS: SeedInstitution[] = [
     {
         name: 'Universitat de Barcelona',
@@ -33,12 +36,84 @@ const SEED_INSTITUTIONS: SeedInstitution[] = [
         city: 'Parigi',
         erasmusCode: 'F PARIS481',
     },
+    {
+        name: 'Technische Universitat Munchen',
+        country: 'Germania',
+        city: 'Monaco di Baviera',
+        erasmusCode: 'D MUNCHEN02',
+    },
+    {
+        name: 'Universiteit van Amsterdam',
+        country: 'Paesi Bassi',
+        city: 'Amsterdam',
+        erasmusCode: 'NL AMSTERD01',
+    },
+    {
+        name: 'Universidade de Lisboa',
+        country: 'Portogallo',
+        city: 'Lisbona',
+        erasmusCode: 'P LISBOA109',
+    },
+    {
+        name: 'KU Leuven',
+        country: 'Belgio',
+        city: 'Lovanio',
+        erasmusCode: 'B LEUVEN01',
+    },
+    {
+        name: 'University of Edinburgh',
+        country: 'Regno Unito',
+        city: 'Edimburgo',
+        erasmusCode: 'UK EDINBUR01',
+    },
+    {
+        name: 'University of Tokyo',
+        country: 'Giappone',
+        city: 'Tokyo',
+        erasmusCode: 'JP TOKYO01',
+    },
+    {
+        name: 'Columbia University',
+        country: 'Stati Uniti',
+        city: 'New York',
+        erasmusCode: 'US NEWYORK07',
+    },
+    {
+        name: 'University of Toronto',
+        country: 'Canada',
+        city: 'Toronto',
+        erasmusCode: 'CA TORONTO01',
+    },
+    {
+        name: 'University of Melbourne',
+        country: 'Australia',
+        city: 'Melbourne',
+        erasmusCode: 'AU MELBOUR01',
+    },
+    {
+        name: 'Tsinghua University',
+        country: 'Cina',
+        city: 'Pechino',
+        erasmusCode: 'CN BEIJING01',
+    },
+    {
+        name: 'National University of Singapore',
+        country: 'Singapore',
+        city: 'Singapore',
+        erasmusCode: 'SG SINGAP01',
+    },
+    {
+        name: 'Universidade de Sao Paulo',
+        country: 'Brasile',
+        city: 'San Paolo',
+        erasmusCode: 'BR SAOPAUL01',
+    },
 ];
 
 // Un utente di test per ciascun ruolo. Stessa password per comodita' in fase d'esame.
 const SEED_USERS: SeedUser[] = [
     {
-        email: 'studente@cafoscari.it',
+        email: 'studente@unive.it',
         password: 'Ciao1234!',
         role: 'student',
         firstName: 'Tommaso',
@@ -46,7 +121,7 @@ const SEED_USERS: SeedUser[] = [
         matriculationNumber: '905964',
     },
     {
-        email: 'docente@cafoscari.it',
+        email: 'docente@unive.it',
         password: 'Ciao1234!',
         role: 'lecturer',
         firstName: 'Filippo',
@@ -54,7 +129,7 @@ const SEED_USERS: SeedUser[] = [
         matriculationNumber: null,
     },
     {
-        email: 'office@cafoscari.it',
+        email: 'office@unive.it',
         password: 'Ciao1234!',
         role: 'office',
         firstName: 'Giulia',
@@ -101,6 +176,7 @@ async function seedInstitutions(): Promise<void> {
             country: i.country,
             city: i.city,
             erasmusCode: i.erasmusCode,
+            ...(i.flag ? { flag: i.flag } : {}),
         });
         console.log(`[seed] Istituzione di test creata: ${i.name} (${i.erasmusCode})`);
     }

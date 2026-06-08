@@ -10,14 +10,11 @@ import { StoreService } from './core/store.service';
 import { AppbarComponent } from './features/appbar.component';
 import { CreateWizardComponent } from './features/create.component';
 import { ApplicationDetailComponent } from './features/detail/application-detail.component';
-import {
-    LecturerListComponent,
-    OfficeListComponent,
-    StudentListComponent,
-} from './features/lists.component';
+import { LecturerListComponent, OfficeListComponent, StudentListComponent } from './features/lists.component';
 import { LoginComponent } from './features/login.component';
 import { IconComponent } from './ui/icon.component';
 import { ToastHostComponent } from './ui/toast-host.component';
+
 
 @Component({
     selector: 'app-root',

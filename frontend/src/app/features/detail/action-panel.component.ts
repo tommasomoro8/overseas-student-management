@@ -8,6 +8,7 @@ import { ChangeDetectionStrategy, Component, Input, inject } from '@angular/core
 import { FormsModule } from '@angular/forms';
 import { ExamMappingInput, ExamResultInput } from '../../core/api.types';
 import { Application, LearningAgreement } from '../../core/models';
+import { isMobilityOverdue } from '../../core/ovs-data';
 import { StoreService } from '../../core/store.service';
 import { BtnComponent } from '../../ui/btn.component';
 import { IconComponent } from '../../ui/icon.component';
@@ -498,10 +499,8 @@ export class ActionPanelComponent {
     arrival = '';
     departure = '';
 
-    /** True se la data di rientro prevista è già passata: concludere la mobilità diventa urgente. */
     get mobilityOverdue(): boolean {
-        if (!this.app.departure) return false;
-        return this.app.departure.slice(0, 10) < new Date().toISOString().slice(0, 10);
+        return isMobilityOverdue(this.app);
     }
 
     get laSample(): string {

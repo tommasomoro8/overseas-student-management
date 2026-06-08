@@ -50,16 +50,6 @@ export async function initDb(): Promise<void> {
         END $$;
     `);
 
-    // Su DB gia' esistenti il CREATE TYPE sopra viene saltato: aggiungiamo i nuovi
-    // valori in modo idempotente (ADD VALUE IF NOT EXISTS, supportato da PG >= 9.6).
-    await pool.query(`
-        ALTER TYPE application_status ADD VALUE IF NOT EXISTS 'LA_CHANGE_SUBMITTED';
-    `);
-    await pool.query(`
-        ALTER TYPE application_status
-            ADD VALUE IF NOT EXISTS 'MOBILITY_IN_PROGRESS' AFTER 'PRE_DEPARTURE_APPROVED';
-    `);
-
     await pool.query(`
         DO $$ BEGIN
             CREATE TYPE evaluation_decision AS ENUM ('APPROVED', 'REJECTED');
@@ -89,9 +79,6 @@ export async function initDb(): Promise<void> {
             updated_at    TIMESTAMPTZ NOT NULL DEFAULT now()
         );
     `);
-    // Migrazione idempotente per DB gia' creati: la bandiera e' gestita dal backend.
-    // Il backfill dei valori (da country) avviene in backfillInstitutionFlags().
-    await pool.query(`ALTER TABLE institutions ADD COLUMN IF NOT EXISTS flag VARCHAR(10);`);
 
     // --- Domande di mobilita' ---
     await pool.query(`
@@ -141,10 +128,6 @@ export async function initDb(): Promise<void> {
             CONSTRAINT uq_la_app_version UNIQUE (application_id, version_number)
         );
     `);
-    // Migrazione idempotente per DB gia' creati con la vecchia struttura.
-    await pool.query(
-        `ALTER TABLE learning_agreements ADD COLUMN IF NOT EXISTS change_description TEXT;`,
-    );
     // Una sola versione attiva per domanda (indice univoco parziale).
     await pool.query(`
         CREATE UNIQUE INDEX IF NOT EXISTS uq_la_one_active
@@ -163,17 +146,6 @@ export async function initDb(): Promise<void> {
             reason                 TEXT,
             evaluated_at           TIMESTAMPTZ NOT NULL DEFAULT now()
         );
-    `);
-    // Migrazione idempotente per DB esistenti: rinomina rejection_reason -> reason.
-    await pool.query(`
-        DO $$ BEGIN
-            IF EXISTS (
-                SELECT 1 FROM information_schema.columns
-                WHERE table_name = 'learning_agreement_evaluations' AND column_name = 'rejection_reason'
-            ) THEN
-                ALTER TABLE learning_agreement_evaluations RENAME COLUMN rejection_reason TO reason;
-            END IF;
-        END $$;
     `);
     await pool.query(
         `CREATE INDEX IF NOT EXISTS idx_la_eval_la ON learning_agreement_evaluations(learning_agreement_id);`,
@@ -202,20 +174,6 @@ export async function initDb(): Promise<void> {
     // Le righe appartengono alla VERSIONE del LA (learning_agreement_id), non alla
     // domanda: cosi' il ripristino su rifiuto di una modifica e' un semplice toggle di
     // is_active fra versioni. score/exam_date sono compilati al rientro (fase ToR).
-    //
-    // La vecchia tabella era figlia di applications: dato che il DB locale contiene
-    // solo dati di test, la ricreiamo (drop idempotente: scatta solo se trova la
-    // vecchia colonna application_id, quindi non cancella nulla ai riavvii successivi).
-    await pool.query(`
-        DO $$ BEGIN
-            IF EXISTS (
-                SELECT 1 FROM information_schema.columns
-                WHERE table_name = 'exam_mappings' AND column_name = 'application_id'
-            ) THEN
-                DROP TABLE exam_mappings;
-            END IF;
-        END $$;
-    `);
     await pool.query(`
         CREATE TABLE IF NOT EXISTS exam_mappings (
             id                    SERIAL PRIMARY KEY,
@@ -237,17 +195,6 @@ export async function initDb(): Promise<void> {
     );
 
     // --- Valutazioni del Transcript of Records (legate alla singola versione) ---
-    // Migrazione idempotente: rinomina la vecchia tabella transcript_evaluations.
-    // Deve avvenire PRIMA del CREATE sotto, cosi' i dati esistenti vengono preservati
-    // (la tabella rinominata soddisfa l'IF NOT EXISTS e la CREATE viene saltata).
-    await pool.query(`
-        DO $$ BEGIN
-            IF EXISTS (SELECT 1 FROM information_schema.tables WHERE table_name = 'transcript_evaluations')
-               AND NOT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_name = 'transcript_of_record_evaluations') THEN
-                ALTER TABLE transcript_evaluations RENAME TO transcript_of_record_evaluations;
-            END IF;
-        END $$;
-    `);
     // reason: motivazione/nota della decisione (obbligatoria solo in caso di rifiuto).
     await pool.query(`
         CREATE TABLE IF NOT EXISTS transcript_of_record_evaluations (
@@ -258,17 +205,6 @@ export async function initDb(): Promise<void> {
             reason           TEXT,
             evaluated_at     TIMESTAMPTZ NOT NULL DEFAULT now()
         );
-    `);
-    // Migrazione idempotente per DB esistenti: rinomina rejection_reason -> reason.
-    await pool.query(`
-        DO $$ BEGIN
-            IF EXISTS (
-                SELECT 1 FROM information_schema.columns
-                WHERE table_name = 'transcript_of_record_evaluations' AND column_name = 'rejection_reason'
-            ) THEN
-                ALTER TABLE transcript_of_record_evaluations RENAME COLUMN rejection_reason TO reason;
-            END IF;
-        END $$;
     `);
     await pool.query(
         `CREATE INDEX IF NOT EXISTS idx_tor_eval_tor ON transcript_of_record_evaluations(transcript_id);`,

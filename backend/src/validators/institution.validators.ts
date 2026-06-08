@@ -9,4 +9,6 @@ export const institutionSchema = z.object({
     country: text('Paese', 100),
     city: text("Citta'", 100),
     erasmusCode: text('Codice Erasmus', 50),
+    // Bandiera opzionale: se omessa (o vuota) viene derivata dal paese lato model.
+    flag: z.string().trim().max(10, 'Bandiera troppo lunga').optional(),
 });

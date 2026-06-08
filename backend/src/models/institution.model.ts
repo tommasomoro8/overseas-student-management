@@ -19,6 +19,17 @@ export interface InstitutionInput {
     country: string;
     city: string;
     erasmusCode: string;
+    /** Bandiera esplicita (emoji). Se assente o vuota viene derivata dal paese. */
+    flag?: string;
+}
+
+/**
+ * Bandiera da salvare: quella indicata esplicitamente se presente,
+ * altrimenti derivata dal paese tramite countryFlag().
+ */
+function resolveFlag(input: InstitutionInput): string {
+    const explicit = input.flag?.trim();
+    return explicit ? explicit : countryFlag(input.country);
 }
 
 /** Elenco di tutte le istituzioni, ordinate per nome. */
@@ -44,13 +55,16 @@ export async function findInstitutionByErasmusCode(
     return result.rows[0];
 }
 
-/** Inserisce una nuova istituzione e restituisce la riga creata. La bandiera e' derivata dal paese. */
+/**
+ * Inserisce una nuova istituzione e restituisce la riga creata.
+ * La bandiera e' quella indicata in input, oppure derivata dal paese se assente.
+ */
 export async function createInstitution(input: InstitutionInput): Promise<InstitutionRow> {
     const result = await query<InstitutionRow>(
         `INSERT INTO institutions (name, country, city, erasmus_code, flag)
          VALUES ($1, $2, $3, $4, $5)
          RETURNING *`,
-        [input.name, input.country, input.city, input.erasmusCode, countryFlag(input.country)],
+        [input.name, input.country, input.city, input.erasmusCode, resolveFlag(input)],
     );
     const institution = result.rows[0];
     if (!institution) {
@@ -69,7 +83,7 @@ export async function updateInstitution(
          SET name = $1, country = $2, city = $3, erasmus_code = $4, flag = $5, updated_at = now()
          WHERE id = $6
          RETURNING *`,
-        [input.name, input.country, input.city, input.erasmusCode, countryFlag(input.country), id],
+        [input.name, input.country, input.city, input.erasmusCode, resolveFlag(input), id],
     );
     return result.rows[0];
 }

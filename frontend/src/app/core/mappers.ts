@@ -290,6 +290,7 @@ export function mapDetail(app: ApplicationDetail, viewerRole: Role): Application
         })),
         transcripts: app.transcripts.map((t) => ({
             id: t.id,
+            version: t.versionNumber,
             fileName: t.originalName,
             at: t.uploadedAt,
             status: torStatus(t.evaluation, t.isActive, app.status),

@@ -46,6 +46,12 @@ export function phaseOf(status: Status): Phase {
     }
 }
 
+/** True se la data di rientro prevista è già passata: concludere la mobilità diventa urgente. */
+export function isMobilityOverdue(app: Application): boolean {
+    if (!app.departure) return false;
+    return app.departure.slice(0, 10) < new Date().toISOString().slice(0, 10);
+}
+
 /**
  * Stato-azione per ruolo, derivato unicamente dallo stato della domanda
  * (rispecchia la macchina a stati del backend).
@@ -65,7 +71,9 @@ export function actionStatus(app: Application, role: Role): ActionStatus {
             case 'PRE_DEPARTURE_APPROVED':
                 return { kind: 'todo', label: 'Inserisci le date di mobilità' };
             case 'MOBILITY_IN_PROGRESS':
-                return { kind: 'todo', label: 'Carica il Transcript o proponi una modifica' };
+                return isMobilityOverdue(app)
+                    ? { kind: 'todo', label: 'Concludi il periodo di mobilità' }
+                    : { kind: 'none', label: 'Mobilità in corso' };
             case 'LA_CHANGE_SUBMITTED':
                 return { kind: 'waiting', label: 'Modifica in valutazione' };
             case 'TOR_SUBMITTED':

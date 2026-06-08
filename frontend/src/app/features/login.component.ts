@@ -1,7 +1,7 @@
 /* ===========================================================================
    Overseas Mobility — pagina di login (mostrata quando non autenticati)
    =========================================================================== */
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpErrorResponse } from '@angular/common/http';
 import { AuthService } from '../core/auth.service';
@@ -19,7 +19,7 @@ import { IconComponent } from '../ui/icon.component';
             <div class="login-box">
                 <div class="login-brand">
                     <span class="mark"><app-icon name="globe" [size]="19" /></span>
-                    Overseas
+                    Overseas Mobility
                 </div>
                 <div class="card card-pad">
                     <h1 class="login-title">Accedi</h1>
@@ -33,7 +33,7 @@ import { IconComponent } from '../ui/icon.component';
                                 type="email"
                                 name="email"
                                 [(ngModel)]="email"
-                                placeholder="nome@cafoscari.it"
+                                placeholder="nome@unive.it"
                                 autocomplete="username"
                                 autofocus
                             />
@@ -50,8 +50,8 @@ import { IconComponent } from '../ui/icon.component';
                             />
                         </div>
 
-                        @if (error) {
-                            <div class="note red" style="margin-top:16px">{{ error }}</div>
+                        @if (error()) {
+                            <div class="note red" style="margin-top:16px">{{ error() }}</div>
                         }
 
                         <button
@@ -60,16 +60,14 @@ import { IconComponent } from '../ui/icon.component';
                             type="submit"
                             class="block"
                             style="width:100%;margin-top:18px"
-                            [disabled]="loading || !email.trim() || !password"
+                            [disabled]="loading() || !email.trim() || !password"
                         >
-                            {{ loading ? 'Accesso in corso…' : 'Accedi' }}
+                            {{ loading() ? 'Accesso in corso…' : 'Accedi' }}
                         </button>
                     </form>
 
                     <div class="login-hint">
-                        Utenti demo (password <code>Ciao1234!</code>):<br />
-                        studente&#64;cafoscari.it · docente&#64;cafoscari.it ·
-                        office&#64;cafoscari.it
+                        Utenti demo: studente&#64;unive.it · docente&#64;unive.it ·office&#64;unive.it
                     </div>
                 </div>
             </div>
@@ -80,28 +78,45 @@ export class LoginComponent {
     private readonly auth = inject(AuthService);
     private readonly store = inject(StoreService);
 
-    email = '';
-    password = '';
-    loading = false;
-    error = '';
+    email = 'studente@unive.it';
+    password = 'Ciao1234!';
+    readonly loading = signal(false);
+    readonly error = signal('');
 
     submit(): void {
-        if (this.loading || !this.email.trim() || !this.password) return;
-        this.loading = true;
-        this.error = '';
+        if (this.loading() || !this.email.trim() || !this.password) return;
+        this.loading.set(true);
+        this.error.set('');
         this.auth.login(this.email.trim(), this.password).subscribe({
             next: () => {
-                this.loading = false;
+                this.loading.set(false);
                 // riparti sempre dalla lista del ruolo appena autenticato
                 this.store.go('list');
             },
             error: (err: unknown) => {
-                this.loading = false;
-                this.error =
-                    err instanceof HttpErrorResponse && err.status === 401
-                        ? 'Credenziali non valide.'
-                        : 'Errore di connessione al server. Riprova.';
+                this.loading.set(false);
+                this.error.set(this.loginErrorMessage(err));
             },
         });
+    }
+
+    /**
+     * Traduce l'errore HTTP del login in un messaggio scritto da NOI, in base allo
+     * status. Non esponiamo mai il testo grezzo del backend (evita info leak).
+     */
+    private loginErrorMessage(err: unknown): string {
+        if (!(err instanceof HttpErrorResponse)) return 'Si è verificato un errore. Riprova.';
+        switch (err.status) {
+            case 0:
+                return 'Server non raggiungibile. Controlla la connessione e riprova.';
+            case 400:
+                return 'Controlla i dati inseriti e riprova.';
+            case 401:
+                return 'Credenziali non valide.';
+            default:
+                return err.status >= 500
+                    ? 'Errore del server. Riprova più tardi.'
+                    : 'Si è verificato un errore. Riprova.';
+        }
     }
 }

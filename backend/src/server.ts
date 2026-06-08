@@ -16,6 +16,7 @@ import { initRealtime } from './realtime/realtime';
 async function startServer(): Promise<void> {
     try {
         await initDb();
+        
         // Popola la bandiera per le istituzioni preesistenti (idempotente).
         await backfillInstitutionFlags();
 

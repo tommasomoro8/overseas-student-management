@@ -19,7 +19,9 @@ import {
 
 const BASE = '/api/v1';
 
-@Injectable({ providedIn: 'root' })
+@Injectable({
+    providedIn: 'root'
+})
 export class ApiService {
     private readonly http = inject(HttpClient);
 

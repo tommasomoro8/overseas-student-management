@@ -1,5 +1,5 @@
 /* ===========================================================================
-   Overseas Mobility — store applicativo collegato al backend reale.
+   Overseas Mobility
    Gestisce navigazione, elenco/dettaglio (con loading/errore) e tutte le azioni
    del workflow, rispettando la macchina a stati del backend.
    =========================================================================== */
@@ -42,7 +42,9 @@ function saveBlob(blob: Blob, filename: string): void {
     URL.revokeObjectURL(url);
 }
 
-@Injectable({ providedIn: 'root' })
+@Injectable({
+    providedIn: 'root'
+})
 export class StoreService {
     private readonly auth = inject(AuthService);
     private readonly api = inject(ApiService);
@@ -122,7 +124,7 @@ export class StoreService {
         if (c) this.loadDetail(c.numericId);
     }
 
-    // ---- realtime: ricarica "morbida" quando un altro utente aggiorna la pratica ----
+    // ---- realtime: ricarica quando un altro utente aggiorna la pratica ----
     private watch(id: number): void {
         this.unwatch();
         this.watchCleanup = this.realtime.watchApplication(id, () => this.silentReload());

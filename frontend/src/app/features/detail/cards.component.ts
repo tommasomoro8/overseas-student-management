@@ -106,8 +106,21 @@ export class MetaBarComponent {
                         </div>
                         <div class="fmeta">
                             <div class="fname">{{ t.fileName }}</div>
-                            <div class="fsub">Transcript of Records · {{ fmtDate(t.at) }}</div>
+                            <div class="fsub">
+                                Transcript of Records · v{{ t.version }} · {{ fmtDate(t.at) }}
+                            </div>
                         </div>
+                        @switch (t.status) {
+                            @case ('approved') {
+                                <app-badge kind="none">Approvato</app-badge>
+                            }
+                            @case ('rejected') {
+                                <app-badge kind="danger">Rifiutato</app-badge>
+                            }
+                            @default {
+                                <app-badge kind="waiting">In valutazione</app-badge>
+                            }
+                        }
                         <button
                             class="iconbtn"
                             title="Scarica"

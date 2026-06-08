@@ -1,5 +1,5 @@
 /* ===========================================================================
-   Overseas Mobility — view-model di dominio (popolato dai DTO backend via mappers)
+   Overseas Mobility — view-model di dominio (popolato dai Data Transfer Object backend via mappers)
    =========================================================================== */
 import { ApplicationStatus } from './api.types';
 
@@ -8,7 +8,7 @@ export type Role = 'student' | 'lecturer' | 'office';
 // fase UI derivata dallo stato backend
 export type Phase = 'pre-departure' | 'during-mobility' | 'after-returning' | 'concluded';
 
-// la VM usa direttamente lo stato del backend
+// la ViewModel usa direttamente lo stato del backend
 export type Status = ApplicationStatus;
 
 export type DocStatus = 'pending' | 'approved' | 'rejected';
@@ -67,6 +67,7 @@ export interface LearningAgreement {
 
 export interface Transcript {
     id: number;
+    version: number;
     fileName: string;
     at: string;
     status: DocStatus;

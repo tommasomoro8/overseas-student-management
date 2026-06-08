@@ -17,7 +17,7 @@ import { IconComponent } from '../ui/icon.component';
         <div class="appbar">
             <div class="brand">
                 <span class="mark"><app-icon name="globe" [size]="17" /></span>
-                Overseas
+                Overseas Mobility
             </div>
             <div class="spacer"></div>
             @if (auth.user(); as u) {

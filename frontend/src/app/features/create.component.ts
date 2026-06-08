@@ -36,8 +36,10 @@ import { ToastService } from '../ui/toast.service';
                 <div class="field">
                     <label>Anno accademico</label>
                     <select class="sel" [(ngModel)]="academicYear">
-                        <option>2025/2026</option>
-                        <option>2026/2027</option>
+                        <option value="" disabled hidden>Seleziona…</option>
+                        @for (y of academicYears; track y) {
+                            <option [value]="y">{{ y }}</option>
+                        }
                     </select>
                 </div>
 
@@ -72,7 +74,7 @@ import { ToastService } from '../ui/toast.service';
                     <div class="field">
                         <label>Periodo di mobilità previsto</label>
                         <select class="sel" [(ngModel)]="period">
-                            <option value="">Seleziona…</option>
+                            <option value="" disabled hidden>Seleziona…</option>
                             @for (p of periods; track p.id) {
                                 <option [value]="p.id">{{ p.label }}</option>
                             }
@@ -81,7 +83,7 @@ import { ToastService } from '../ui/toast.service';
                     <div class="field">
                         <label>Docente referente</label>
                         <select class="sel" [(ngModel)]="lecturerId">
-                            <option [ngValue]="null">Seleziona…</option>
+                            <option [ngValue]="null" disabled hidden>Seleziona…</option>
                             @for (l of store.lecturers(); track l.id) {
                                 <option [ngValue]="l.id">{{ l.firstName }} {{ l.lastName }}</option>
                             }
@@ -118,11 +120,21 @@ export class CreateWizardComponent {
     private readonly toast = inject(ToastService);
     readonly periods = PERIOD_OPTIONS;
 
-    academicYear = '2025/2026';
+    academicYear = '';
     institutionId: number | null = null;
     period: MobilityPeriod | '' = '';
     lecturerId: number | null = null;
     busy = false;
+
+    readonly academicYears = (() => {
+        const currentYear = new Date().getFullYear();
+        return [
+            `${currentYear - 1}/${currentYear}`,
+            `${currentYear}/${currentYear + 1}`,
+            `${currentYear + 1}/${currentYear + 2}`,
+            `${currentYear + 2}/${currentYear + 3}`,
+        ];
+    })();
 
     constructor() {
         this.store.ensureRefData();

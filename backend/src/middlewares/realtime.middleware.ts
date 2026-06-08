@@ -11,7 +11,7 @@ import { notifyApplicationUpdated, notifyApplicationsChanged } from '../realtime
  * tramite l'header X-Socket-Id.
  */
 export function realtimeNotifier(req: Request, res: Response, next: NextFunction): void {
-    res.on('finish', () => {
+    res.on('finish', () => { // scatta dopo che il controller ha scritto la risposta, quindi conosceamo status e URL finale
         if (req.method === 'GET') return;
         if (res.statusCode < 200 || res.statusCode >= 300) return;
         if (!req.originalUrl.includes('/applications')) return;

@@ -1,5 +1,5 @@
 /* ===========================================================================
-   Overseas Mobility — autenticazione reale contro il backend (/api/v1/auth)
+   Overseas Mobility — autenticazione (/api/v1/auth)
    Gestisce login, logout, ripristino sessione (token in localStorage) e
    l'utente corrente esposto come signal.
    =========================================================================== */
@@ -18,9 +18,11 @@ export interface AuthUser {
     createdAt: string;
 }
 
-const TOKEN_KEY = 'ovs_token';
+const TOKEN_KEY = 'ovs_token'; // chiave usata in localStorage per salvare il token JWT
 
-@Injectable({ providedIn: 'root' })
+@Injectable({
+    providedIn: 'root'
+})
 export class AuthService {
     private readonly http = inject(HttpClient);
 

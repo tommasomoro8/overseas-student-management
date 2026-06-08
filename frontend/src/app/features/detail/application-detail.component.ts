@@ -54,7 +54,7 @@ import {
                             <h3>Mapping esami{{ showScores ? ' e voti' : '' }}</h3>
                             <span class="ic"><app-icon name="grad" /></span>
                         </div>
-                        <div class="card-pad" style="padding-top:8px">
+                        <div class="card-pad" [style.padding-top.px]="app.exams.length ? 8 : 22">
                             <app-exam-table [exams]="app.exams" [showScore]="showScores" />
                         </div>
                     </div>

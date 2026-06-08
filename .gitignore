@@ -12,4 +12,4 @@ dist
 .DS_Store
 
 # Claude Code worktrees
-.claude/worktrees/
+/.claude

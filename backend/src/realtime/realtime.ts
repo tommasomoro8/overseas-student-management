@@ -2,7 +2,7 @@ import { Server as HttpServer } from 'http';
 import { Server, Socket } from 'socket.io';
 
 /**
- * Layer realtime "blando": il backend non spinge dati, si limita a segnalare ai
+ * Layer realtime: il backend non spinge dati, si limita a segnalare ai
  * client che stanno guardando una specifica application che i suoi dati sono
  * cambiati. Ricevuta la segnalazione, il client ricarica il dettaglio via HTTP.
  */
@@ -14,11 +14,10 @@ function roomFor(applicationId: number | string): string {
 
 /** Inizializza socket.io sul server HTTP esistente e gestisce join/leave delle stanze. */
 export function initRealtime(httpServer: HttpServer): Server {
-    io = new Server(httpServer, {
-        // Stesso criterio del CORS HTTP (cors() globale in app.ts): in dev si passa
-        // comunque dal proxy del dev-server, quindi same-origin.
-        cors: { origin: '*' },
-    });
+    // Nessun CORS necessario: il browser e' sempre same-origin con il backend.
+    // In dev passa dal proxy del dev-server, in prod dal reverse proxy Nginx;
+    // in entrambi i casi /socket.io viene inoltrato al backend dalla stessa origine.
+    io = new Server(httpServer);
 
     io.on('connection', (socket: Socket) => {
         // Il client entra nella stanza della application aperta nel dettaglio.

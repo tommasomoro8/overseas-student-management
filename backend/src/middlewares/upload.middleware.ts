@@ -7,7 +7,7 @@ import { env } from '../config/env';
 import { AppError } from '../utils/AppError';
 
 // Assicura l'esistenza della cartella di upload all'avvio del modulo.
-fs.mkdirSync(env.UPLOAD_DIR, { recursive: true });
+fs.mkdirSync(env.UPLOAD_DIR, { recursive: true }); // recursive: true evita errori se la cartella esiste già, e crea eventuali sottocartelle necessarie
 
 const storage = multer.diskStorage({
     destination: (_req, _file, cb) => {

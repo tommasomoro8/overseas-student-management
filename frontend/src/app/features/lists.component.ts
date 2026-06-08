@@ -1,7 +1,8 @@
 /* ===========================================================================
    Overseas Mobility — schermate elenco per ruolo (dati reali dal backend).
    Il backend filtra già per ruolo (studente: proprie; docente: come referente;
-   ufficio: tutte), quindi qui non serve alcun filtro lato client.
+   ufficio: tutte). I filtri lato client (docente/ufficio) servono solo a
+   restringere l'elenco gia' ricevuto: "da gestire" (azione richiesta) o per fase.
    =========================================================================== */
 import { ChangeDetectionStrategy, Component, Input, inject } from '@angular/core';
 import { Application } from '../core/models';
@@ -102,12 +103,18 @@ export class StudentListComponent {
     }
 }
 
+/* ---------- definizione filtro (condivisa tra docente e ufficio) ---------- */
+interface FilterDef {
+    id: string;
+    label: string;
+}
+
 /* ---------- DOCENTE ---------- */
 @Component({
     selector: 'app-lecturer-list',
     standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [AppRowComponent, ListHeaderComponent],
+    imports: [IconComponent, AppRowComponent, ListHeaderComponent],
     template: `
         <div class="page">
             <div class="page-head">
@@ -116,9 +123,26 @@ export class StudentListComponent {
                     <h1>Applications da seguire</h1>
                     <div class="sub">
                         Domande di mobilità per cui sei docente referente.{{
-                            todoCount ? ' ' + todoCount + ' richiedono la tua valutazione.' : ''
+                            todoApps.length
+                                ? ' ' + todoApps.length + ' richiedono la tua valutazione.'
+                                : ''
                         }}
                     </div>
+                </div>
+            </div>
+            <div class="filterbar">
+                @for (f of filters; track f.id) {
+                    <button class="fbtn" [class.active]="filter === f.id" (click)="filter = f.id">
+                        {{ f.label }}
+                    </button>
+                }
+                <div class="searchbox" style="margin-left:auto">
+                    <app-icon name="search" [size]="16" />
+                    <input
+                        placeholder="Cerca per ateneo, studente, paese…"
+                        [value]="q"
+                        (input)="q = asInput($event).value"
+                    />
                 </div>
             </div>
             @if (store.listLoading() && store.apps().length === 0) {
@@ -128,11 +152,11 @@ export class StudentListComponent {
             } @else {
                 <app-list-header />
                 <div class="list">
-                    @for (a of store.apps(); track a.numericId) {
+                    @for (a of shown; track a.numericId) {
                         <app-app-row [app]="a" />
                     }
-                    @if (store.apps().length === 0) {
-                        <div class="empty">Nessuna application assegnata.</div>
+                    @if (shown.length === 0) {
+                        <div class="empty">Nessuna application corrisponde ai filtri.</div>
                     }
                 </div>
             }
@@ -141,19 +165,51 @@ export class StudentListComponent {
 })
 export class LecturerListComponent {
     readonly store = inject(StoreService);
+    filter = 'all';
+    q = '';
+
     constructor() {
         this.store.loadList();
     }
-    get todoCount(): number {
-        return this.store.apps().filter((a) => actionStatus(a, 'lecturer').kind === 'todo').length;
+
+    asInput(e: Event): HTMLInputElement {
+        return e.target as HTMLInputElement;
+    }
+
+    /** Pratiche che richiedono un'azione del docente (valutazione LA / modifica / Transcript). */
+    get todoApps(): Application[] {
+        return this.store.apps().filter((a) => actionStatus(a, 'lecturer').kind === 'todo');
+    }
+
+    get filters(): FilterDef[] {
+        return [
+            { id: 'all', label: 'Tutte' },
+            { id: 'todo', label: `Da gestire (${this.todoApps.length})` },
+            { id: 'pre-departure', label: 'Pre-partenza' },
+            { id: 'during-mobility', label: 'In mobilità' },
+            { id: 'after-returning', label: 'Al rientro' },
+            { id: 'concluded', label: 'Concluse' },
+        ];
+    }
+
+    get shown(): Application[] {
+        const apps = this.store.apps();
+        let shown = apps;
+        if (this.filter === 'todo') shown = this.todoApps;
+        else if (this.filter !== 'all') shown = apps.filter((a) => a.phase === this.filter);
+        if (this.q.trim()) {
+            const s = this.q.toLowerCase();
+            shown = shown.filter((a) =>
+                (a.institution.name + a.student.name + a.id + a.institution.country)
+                    .toLowerCase()
+                    .includes(s),
+            );
+        }
+        return shown;
     }
 }
 
 /* ---------- UFFICIO ---------- */
-interface FilterDef {
-    id: string;
-    label: string;
-}
 interface StatDef {
     n: number;
     l: string;

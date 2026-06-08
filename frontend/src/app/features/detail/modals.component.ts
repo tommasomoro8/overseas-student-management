@@ -23,10 +23,10 @@ import { ModalComponent } from '../../ui/modal.component';
 interface MapRow {
     foreignCode: string;
     foreignName: string;
-    foreignCredits: string;
+    foreignCredits: number | null;
     cfCode: string;
     cfTitle: string;
-    cfCredits: string;
+    cfCredits: number | null;
 }
 
 /* ---------------- approve / reject ---------------- */
@@ -182,6 +182,8 @@ export class DecisionModalComponent {
                                     <div class="field" style="margin-bottom:0">
                                         <label>Crediti</label
                                         ><input
+                                            type="number"
+                                            min="0"
                                             class="inp mono"
                                             [(ngModel)]="r.foreignCredits"
                                             placeholder="6"
@@ -214,6 +216,8 @@ export class DecisionModalComponent {
                                     <div class="field" style="margin-bottom:0">
                                         <label>CFU</label
                                         ><input
+                                            type="number"
+                                            min="0"
                                             class="inp mono"
                                             [(ngModel)]="r.cfCredits"
                                             placeholder="6"
@@ -267,10 +271,10 @@ export class LearningAgreementModalComponent implements OnInit {
             ? this.initialExams.map((e) => ({
                   foreignCode: e.foreignCode,
                   foreignName: e.foreignName,
-                  foreignCredits: String(e.foreignCredits ?? ''),
+                  foreignCredits: e.foreignCredits ?? null,
                   cfCode: e.cfCode,
                   cfTitle: e.cfTitle,
-                  cfCredits: String(e.cfCredits ?? ''),
+                  cfCredits: e.cfCredits ?? null,
               }))
             : [this.blank()];
     }
@@ -279,10 +283,10 @@ export class LearningAgreementModalComponent implements OnInit {
         return {
             foreignCode: '',
             foreignName: '',
-            foreignCredits: '',
+            foreignCredits: null,
             cfCode: '',
             cfTitle: '',
-            cfCredits: '',
+            cfCredits: null,
         };
     }
     addRow(): void {
@@ -301,10 +305,10 @@ export class LearningAgreementModalComponent implements OnInit {
                 (r) =>
                     r.foreignCode.trim() &&
                     r.foreignName.trim() &&
-                    r.foreignCredits !== '' &&
+                    r.foreignCredits != null &&
                     r.cfCode.trim() &&
                     r.cfTitle.trim() &&
-                    r.cfCredits !== '',
+                    r.cfCredits != null,
             )
         );
     }
@@ -314,10 +318,10 @@ export class LearningAgreementModalComponent implements OnInit {
         const mappings: ExamMappingInput[] = this.rows.map((r) => ({
             foreignCode: r.foreignCode.trim(),
             foreignTitle: r.foreignName.trim(),
-            foreignCredits: +r.foreignCredits || 0,
+            foreignCredits: r.foreignCredits ?? 0,
             homeCode: r.cfCode.trim(),
             homeTitle: r.cfTitle.trim(),
-            homeCredits: +r.cfCredits || 0,
+            homeCredits: r.cfCredits ?? 0,
         }));
         this.submitted.emit({
             file: this.file,

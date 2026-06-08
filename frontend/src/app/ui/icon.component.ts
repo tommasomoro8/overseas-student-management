@@ -1,5 +1,5 @@
 /* ===========================================================================
-   Overseas Mobility — inline stroke icons (port of ui.jsx Icon)
+   Overseas Mobility — inline stroke icons
    =========================================================================== */
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 
