@@ -9,20 +9,20 @@ puppeteer:
 ---
 <style>
 .mermaid {
-  text-align: center;     /* centra il diagramma */
+  text-align: center;
 }
 .mermaid svg {
   display: block;
-  margin: 0 auto;         /* centratura orizzontale */
-  width: 100%;            /* occupa la larghezza disponibile */
-  max-width: 850px;       /* ...ma non oltre, così non "sgrana"/non diventa enorme */
-  height: auto;           /* mantiene le proporzioni */
+  margin: 0 auto;
+  width: 100%;
+  max-width: 850px;
+  height: auto;
 }
-img {                     /* screenshot della sezione 6 */
+img {
   display: block;
-  margin: 14px auto;      /* centrati con un po' di spazio sopra/sotto */
-  max-width: 100%;        /* mai più larghi della pagina */
-  height: auto;           /* mantiene le proporzioni */
+  margin: 14px auto; 
+  max-width: 100%;
+  height: auto;
   border: 1px solid #d9d9d9;
   border-radius: 6px;
 }
