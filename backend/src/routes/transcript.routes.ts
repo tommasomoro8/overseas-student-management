@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import * as transcriptController from '../controllers/transcript.controller';
+import * as transcriptController from '../controllers/tor.controller';
 import { authorize } from '../middlewares/auth.middleware';
 import { parseJsonFields, validateBody } from '../middlewares/validate.middleware';
 import { uploadPdf } from '../middlewares/upload.middleware';

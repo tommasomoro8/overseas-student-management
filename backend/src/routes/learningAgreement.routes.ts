@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import * as laController from '../controllers/learningAgreement.controller';
+import * as laController from '../controllers/la.controller';
 import { authorize } from '../middlewares/auth.middleware';
 import { parseJsonFields, validateBody } from '../middlewares/validate.middleware';
 import { uploadPdf } from '../middlewares/upload.middleware';

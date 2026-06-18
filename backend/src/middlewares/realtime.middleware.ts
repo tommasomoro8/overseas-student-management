@@ -15,9 +15,12 @@ export function realtimeNotifier(req: Request, res: Response, next: NextFunction
         if (req.method === 'GET') return;
         if (res.statusCode < 200 || res.statusCode >= 300) return;
         if (!req.originalUrl.includes('/applications')) return;
+
         const socketId = req.header('x-socket-id') || undefined;
         const applicationId = req.originalUrl.match(/\/applications\/(\d+)/)?.[1];
+
         if (applicationId) notifyApplicationUpdated(applicationId, socketId);
+        
         notifyApplicationsChanged(socketId);
     });
     next();
