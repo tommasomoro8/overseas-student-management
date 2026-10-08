@@ -36,6 +36,41 @@ Angular 18, TypeScript, Node.js, Express, PostgreSQL, Socket.IO, JWT, Zod, Multe
 <!-- portfolio:start -->
 ## The problem
 
+Ca' Foscari's Overseas programme lets students spend a semester or a year at a partner university outside Europe and have the exams they pass there recognised back home.
+
+Today the whole process runs over email between three parties: the student, the referent lecturer and the International Office. On top of that, every application goes through several steps before, during and after the stay abroad:
+
+- **Before departure:** the student uploads a Learning Agreement listing the exams they plan to take abroad and the Ca' Foscari exams they replace. The lecturer approves it, then the International Office checks it.
+- **During the stay:** the student records the actual arrival and return dates and can propose changes to the exam plan, which the lecturer approves or rejects.
+- **After returning:** the student uploads the Transcript of Records with the grades, the lecturer approves the exams and the International Office closes the application.
+
+With documents and approvals scattered across email threads, it only takes a moment for a file to get lost or a deadline to be missed. The university needs a single application that manages the whole process.
+
+This is the brief the Web Applications and Technologies professor chose for the 2025/2026 academic year: a concrete problem that actually needs solving, which I tackled as my individual exam project. The [exam assignment](https://github.com/tommasomoro8/overseas-student-management/blob/main/docs/EXAM_ASSIGNMENT.pdf) asked for it as a REST backend in Node.js with Express, an Angular single-page app, and each component in its own Docker container.
+
+## The solution
+A web app with one view per role, driven by an 11-state workflow. Students create applications and upload PDFs with their exam plan and grades, and lecturers approve or reject them with a reason. The office checks the pre-departure phase and closes the file.
+
+## Technical challenges
+- Every state change is checked against a table of allowed transitions, inside a transaction that locks the row.
+- Each learning agreement version keeps its own exam plan, so rejecting a change reactivates the previous one.
+- Socket.IO only says which application changed, and the client reloads it over HTTP.
+
+## What I learned
+- Documenting a project properly: ER diagram, state machine, API reference and walkthroughs.
+- Containerising three services with Docker Compose, with separate development and production setups.
+- Angular with standalone components and signals, and TypeScript on both ends.
+
+## Stack
+Angular 18, TypeScript, Node.js, Express, PostgreSQL, Socket.IO, JWT, Zod, Multer, Docker, Nginx
+
+## Recognition
+- Graded 30 cum laude out of 30 in the Web Applications and Technologies exam.
+-->
+
+<!-- portfolio:start -->
+## The problem
+
 Ca' Foscari's Overseas programme lets students spend a semester or a year at a partner university outside Europe and have the exams they pass there recognised back home. Each stay goes through several administrative steps, shared between three people:
 
 - **before departure**, the student picks a host university and a referent lecturer, lists the exams they plan to take abroad next to the Ca' Foscari exams they replace, and uploads a Learning Agreement. The lecturer approves or rejects it, then the international office checks the pre-departure phase;
