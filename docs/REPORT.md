@@ -637,7 +637,7 @@ I passaggi sono illustrati con screenshot dell'applicazione in esecuzione, ripro
 ### 6.1 Studente
 
 1. **Login** e atterraggio su *"Le mie applications"*.
-   ![Lista delle application dello studente](screenshots/cover.png)
+   ![Lista delle application dello studente](screenshots/student-list.png)
 2. **Nuova application**: sceglie istituzione ospitante, docente referente, anno accademico e periodo → la domanda nasce in stato `DRAFT`.
    ![Wizard di creazione di una nuova application](screenshots/student-newapplication.png)
 3. **Invio Learning Agreement**: carica il PDF e compila il **mapping esami** (estero ↔ Ca' Foscari) → stato `LA_SUBMITTED`.
