@@ -87,9 +87,10 @@ body {
     margin: 0;
     padding: 0;
 }
-/* spazio fisso per la barra di scorrimento: il layout non si sposta quando compare */
+/* barra di scorrimento sempre presente: la larghezza della pagina non cambia
+   tra viste corte e lunghe (funziona in tutti i browser, a differenza di scrollbar-gutter) */
 html {
-    scrollbar-gutter: stable;
+    overflow-y: scroll;
 }
 body {
     font-family: var(--font-body);
