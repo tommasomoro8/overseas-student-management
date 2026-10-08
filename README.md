@@ -42,7 +42,7 @@ Ca' Foscari's Overseas programme lets students spend a semester or a year at a p
 - **during the stay**, the student records the actual arrival and return dates and can propose changes to the exam plan, which the lecturer approves or rejects. A rejected change must bring back the previous plan;
 - **after returning**, the student uploads the Transcript of Records with grades and dates, the lecturer approves the exams, and the office closes the application.
 
-This was my individual project for the Web Applications and Technologies exam (a.y. 2025/2026). The brief asked for this workflow as a REST backend in Node.js with Express, an Angular single-page app, and each component in its own Docker container.
+This was my individual project for the Web Applications and Technologies exam (a.y. 2025/2026). The [brief](docs/PROJECT_BRIEF.pdf) asked for this workflow as a REST backend in Node.js with Express, an Angular single-page app, and each component in its own Docker container.
 
 ## The solution
 
@@ -196,6 +196,7 @@ overseas-student-management/
 │   └── .devcontainer/            ← VS Code dev container
 ├── docs/
 │   ├── demo.html                 ← self-contained demo
+│   ├── PROJECT_BRIEF.pdf         ← exam project brief from the course
 │   ├── REPORT.md, REPORT.pdf     ← exam report (in Italian)
 │   └── screenshots/              ← images used in this README and in the report
 ├── README.md
@@ -220,12 +221,12 @@ What I would do next:
 - **Tests on the state machine.** Service tests against a throwaway PostgreSQL database, one for each allowed and forbidden transition, plus the rejected-change restore and the "all grades present" rule.
 - **One copy of the rules.** The demo currently repeats the service logic in `demo-db.ts`. I would move the transition table and the checks into a small shared TypeScript package used by both the backend and the demo, so the two can't drift apart.
 - **A volume for uploads** in `docker-compose.prod.yml`, or object storage, so documents survive a redeploy.
-- **Cancellation.** A `CANCELLED` state reachable from the pre-departure states, with a reason, as the brief describes.
+- **Cancellation.** A `CANCELLED` state, which the brief lists among the statuses, reachable from the pre-departure states so a student can withdraw before leaving.
 
 ## Credits and license
 
 - Design, backend, frontend and documentation: Tommaso Moro.
-- The project brief comes from the Web Applications and Technologies course, Ca' Foscari University of Venice, a.y. 2025/2026.
+- The [project brief](docs/PROJECT_BRIEF.pdf) comes from the Web Applications and Technologies course, Ca' Foscari University of Venice, a.y. 2025/2026.
 
 The code is released under the [MIT License](LICENSE).
 
