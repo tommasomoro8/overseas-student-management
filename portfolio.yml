@@ -1,0 +1,18 @@
+title: "Overseas Mobility"
+slug: "overseas-mobility"
+category: "uni"          # uni | school | pers | comm
+year: 2026
+period: "Apr 2026 – Jun 2026"
+status: "completed"      # completed | in progress | archived
+role: "solo"             # e.g. "solo", "team of 4, backend"
+cover: docs/screenshots/cover.png
+demo: "https://tommasomoro8.github.io/overseas-student-management/demo.html"
+note: "Interface in Italian. The demo runs in the browser with sample data that resets on reload."
+press: []
+screenshots:
+  - path: docs/screenshots/cover.png
+    alt: "Office view: \"Tutte le applications\" page with counters for total, to-do, in-mobility and closed applications, status filters, a search box and one application waiting for the pre-departure check"
+  - path: docs/screenshots/student-la2.png
+    alt: "Student uploading the Learning Agreement: PDF drop zone and the form that maps a course abroad (code, name, credits) to a Ca' Foscari course (code, title, credits)"
+  - path: docs/screenshots/lecturer-la.png
+    alt: "Lecturer view of an application waiting for review: Learning Agreement PDF to download, \"Approva / Rifiuta\" button, exam mapping and the progress timeline"
