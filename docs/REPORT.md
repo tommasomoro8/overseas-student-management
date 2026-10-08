@@ -637,7 +637,7 @@ I passaggi sono illustrati con screenshot dell'applicazione in esecuzione, ripro
 ### 6.1 Studente
 
 1. **Login** e atterraggio su *"Le mie applications"*.
-   ![Lista delle application dello studente](screenshots/student-list.png)
+   ![Lista delle application dello studente](screenshots/cover.png)
 2. **Nuova application**: sceglie istituzione ospitante, docente referente, anno accademico e periodo → la domanda nasce in stato `DRAFT`.
    ![Wizard di creazione di una nuova application](screenshots/student-newapplication.png)
 3. **Invio Learning Agreement**: carica il PDF e compila il **mapping esami** (estero ↔ Ca' Foscari) → stato `LA_SUBMITTED`.
@@ -662,7 +662,7 @@ I passaggi sono illustrati con screenshot dell'applicazione in esecuzione, ripro
 ### 6.3 Ufficio (office)
 
 1. **Login** → *"Tutte le applications"* con statistiche e filtri per stato.
-   ![Lista ufficio con statistiche e filtri](screenshots/cover.png)
+   ![Lista ufficio con statistiche e filtri](screenshots/office-list.png)
 2. **Verifica la pre-partenza** per le domande con LA approvato (`LA_APPROVED → PRE_DEPARTURE_APPROVED`).
    ![Verifica della pre-partenza](screenshots/office-verify.png)
 3. **Chiude la pratica** quando il Transcript è approvato (`TOR_APPROVED → CLOSED`).

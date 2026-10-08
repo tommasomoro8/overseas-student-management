@@ -11,8 +11,10 @@ note: "Interface in Italian. The demo runs in the browser with sample data that 
 press: []
 screenshots:
   - path: docs/screenshots/cover.png
-    alt: "Office view: \"Tutte le applications\" page with counters for total, to-do, in-mobility and closed applications, status filters, a search box and one application waiting for the pre-departure check"
-  - path: docs/screenshots/student-la2.png
-    alt: "Student uploading the Learning Agreement: PDF drop zone and the form that maps a course abroad (code, name, credits) to a Ca' Foscari course (code, title, credits)"
+    alt: "Student view: \"Le mie applications\" page with three applications, each showing its status (upload the Learning Agreement, waiting for the lecturer, no action needed), phase, host university and referent lecturer, plus the \"Nuova application\" button"
+  - path: docs/screenshots/student-la1.png
+    alt: "Student's application detail for Columbia University: \"Carica il Learning Agreement\" action box, empty exam mapping and the progress timeline with the steps still to come"
   - path: docs/screenshots/lecturer-la.png
     alt: "Lecturer view of an application waiting for review: Learning Agreement PDF to download, \"Approva / Rifiuta\" button, exam mapping and the progress timeline"
+  - path: docs/screenshots/lecturer-list.png
+    alt: "Lecturer view: \"Applications da seguire\" page filtered on \"Da gestire\", with two applications waiting for the Learning Agreement evaluation"

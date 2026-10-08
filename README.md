@@ -5,7 +5,7 @@ A full-stack web app that tracks a Ca' Foscari student's study period at a partn
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 ![TypeScript](https://img.shields.io/badge/language-TypeScript-3178c6)
 
-![Office view: "Tutte le applications" page with counters for total, to-do, in-mobility and closed applications, status filters, a search box and one application waiting for the pre-departure check](docs/screenshots/cover.png)
+![Student view: "Le mie applications" page with three applications, each showing its status (upload the Learning Agreement, waiting for the lecturer, no action needed), phase, host university and referent lecturer, plus the "Nuova application" button](docs/screenshots/cover.png)
 
 **Live demo:** https://tommasomoro8.github.io/overseas-student-management/demo.html <!-- TODO: enable GitHub Pages (Settings → Pages → branch main, folder /docs) so this link works -->
 
@@ -54,9 +54,11 @@ After login, each role lands on its own list of applications. Every row shows th
 
 The detail page of an application shows a timeline of every step with who did it and when, all versions of each document with their outcome, and the history of proposed changes. If two people have the same application open, an action by one refreshes the other's page.
 
-![Student uploading the Learning Agreement: PDF drop zone and the form that maps a course abroad (code, name, credits) to a Ca' Foscari course (code, title, credits)](docs/screenshots/student-la2.png)
+![Student's application detail for Columbia University: "Carica il Learning Agreement" action box, empty exam mapping and the progress timeline with the steps still to come](docs/screenshots/student-la1.png)
 
 ![Lecturer view of an application waiting for review: Learning Agreement PDF to download, "Approva / Rifiuta" button, exam mapping and the progress timeline](docs/screenshots/lecturer-la.png)
+
+![Lecturer view: "Applications da seguire" page filtered on "Da gestire", with two applications waiting for the Learning Agreement evaluation](docs/screenshots/lecturer-list.png)
 
 The interface is in Italian. The [demo](https://tommasomoro8.github.io/overseas-student-management/demo.html) runs the same Angular app in the browser with an in-memory copy of the backend logic. Instead of the login it shows three buttons, one per role, with sample applications already in every state. Reloading the page resets the data.
 
