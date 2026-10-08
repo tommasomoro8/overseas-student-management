@@ -87,6 +87,10 @@ body {
     margin: 0;
     padding: 0;
 }
+/* spazio fisso per la barra di scorrimento: il layout non si sposta quando compare */
+html {
+    scrollbar-gutter: stable;
+}
 body {
     font-family: var(--font-body);
     background: var(--bg);
