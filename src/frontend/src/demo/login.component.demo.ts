@@ -33,16 +33,11 @@ const TOKEN_KEY = 'ovs_token'; // stessa chiave di AuthService
                             <span class="demo-ic"><app-icon [name]="a.icon" [size]="20" /></span>
                             <span class="demo-txt">
                                 <span class="demo-role">{{ a.label }}</span>
-                                <span class="demo-desc">{{ a.desc }}</span>
+                                <span class="demo-name">{{ a.name }}</span>
                             </span>
                             <app-icon name="chevR" [size]="18" />
                         </button>
                     }
-
-                    <div class="login-hint">
-                        Dati fittizi, salvati solo in questa pagina:<br />
-                        ricaricandola si riparte da zero.
-                    </div>
                 </div>
             </div>
         </div>
@@ -62,6 +57,9 @@ const TOKEN_KEY = 'ovs_token'; // stessa chiave di AuthService
             font: inherit;
             text-align: left;
             cursor: pointer;
+        }
+        .demo-account:last-child {
+            margin-bottom: 0;
         }
         .demo-account:hover {
             border-color: var(--primary);
@@ -85,7 +83,7 @@ const TOKEN_KEY = 'ovs_token'; // stessa chiave di AuthService
         .demo-role {
             font-weight: 700;
         }
-        .demo-desc {
+        .demo-name {
             font-size: 12.5px;
             color: var(--text-2);
         }
@@ -95,24 +93,24 @@ export class LoginComponent {
     private readonly auth = inject(AuthService);
     private readonly store = inject(StoreService);
 
-    readonly accounts: { role: ApiRole; icon: string; label: string; desc: string }[] = [
+    readonly accounts: { role: ApiRole; icon: string; label: string; name: string }[] = [
         {
             role: 'student',
             icon: 'grad',
             label: 'Studente',
-            desc: 'Marco Rossi · crea domande e carica i documenti',
+            name: 'Marco Rossi',
         },
         {
             role: 'lecturer',
             icon: 'book',
             label: 'Docente referente',
-            desc: 'Laura Bianchi · valuta Learning Agreement e Transcript',
+            name: 'Laura Bianchi',
         },
         {
             role: 'office',
             icon: 'inbox',
             label: 'Ufficio Overseas',
-            desc: 'Giulia Verdi · verifica la pre-partenza e chiude le pratiche',
+            name: 'Giulia Verdi',
         },
     ];
 
