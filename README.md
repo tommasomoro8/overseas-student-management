@@ -42,7 +42,7 @@ Ca' Foscari's Overseas programme lets students spend a semester or a year at a p
 - **during the stay**, the student records the actual arrival and return dates and can propose changes to the exam plan, which the lecturer approves or rejects. A rejected change must bring back the previous plan;
 - **after returning**, the student uploads the Transcript of Records with grades and dates, the lecturer approves the exams, and the office closes the application.
 
-This was my individual project for the Web Applications and Technologies exam (a.y. 2025/2026). The [brief](docs/PROJECT_BRIEF.pdf) asked for this workflow as a REST backend in Node.js with Express, an Angular single-page app, and each component in its own Docker container.
+This was my individual project for the Web Applications and Technologies exam (a.y. 2025/2026). The [exam assignment](https://github.com/tommasomoro8/overseas-student-management/blob/main/docs/EXAM_ASSIGNMENT.pdf) asked for this workflow as a REST backend in Node.js with Express, an Angular single-page app, and each component in its own Docker container.
 
 ## The solution
 
@@ -69,7 +69,7 @@ The interface is in Italian. The [demo](https://tommasomoro8.github.io/overseas-
 
 ## What I learned
 
-- Writing proper documentation for a project. The [report](docs/REPORT.md) (in Italian) covers the architecture, ER diagram, state machine, every endpoint with JSON examples, the authentication flow and a walkthrough per role.
+- Writing proper documentation for a project. The [report](https://github.com/tommasomoro8/overseas-student-management/blob/main/docs/REPORT.pdf) (in Italian) covers the architecture, ER diagram, state machine, every endpoint with JSON examples, the authentication flow and a walkthrough per role.
 - Containerising three services with Docker Compose. Each Dockerfile has a development target with hot reload and a production target. In production Nginx serves the compiled app and forwards `/api` and `/socket.io` to the backend, so the browser only ever talks to one origin.
 - Angular 18 with standalone components, signals and the new `@if`/`@for` syntax, plus TypeScript on both ends: the frontend has a type for every API response (`api.types.ts`).
 
@@ -129,7 +129,7 @@ flowchart LR
 ```
 
 - **Layers in the backend.** Routes chain the middlewares and the controller for each endpoint. Controllers read the request and shape the response. Services hold the rules: who can do what and which transition is allowed. Models are the only code that talks to PostgreSQL, always with parameterised queries. Access checks such as "only the referent lecturer" are written once in the application service and reused by the Learning Agreement and Transcript services.
-- **No ORM.** The schema is created at startup in `db/schema.ts` with plain SQL, so I could use PostgreSQL enums, the partial unique index for the active version and `FOR UPDATE` locks directly. The script is idempotent, and the seed adds three test users and fourteen partner universities when `SEED=true`, as the brief required.
+- **No ORM.** The schema is created at startup in `db/schema.ts` with plain SQL, so I could use PostgreSQL enums, the partial unique index for the active version and `FOR UPDATE` locks directly. The script is idempotent, and the seed adds three test users and fourteen partner universities when `SEED=true`, as the exam assignment required.
 - **Stateless authentication.** Login returns a JWT signed with `JWT_SECRET`. The Angular app stores it in `localStorage` and an interceptor adds it to every request. On a `401` during a session it logs the user out.
 - **Navigation through the store.** The app has three views (list, create, detail). Instead of `@angular/router`, a signal in `StoreService` holds the current view and the root component switches on it and on the user's role.
 - **One origin in every environment.** In development the Angular dev server proxies `/api` and `/socket.io` to the backend (`proxy.conf.js`). In production Nginx does the same (`nginx.conf`). The app always uses relative URLs.
@@ -196,7 +196,7 @@ overseas-student-management/
 │   └── .devcontainer/            ← VS Code dev container
 ├── docs/
 │   ├── demo.html                 ← self-contained demo
-│   ├── PROJECT_BRIEF.pdf         ← exam project brief from the course
+│   ├── EXAM_ASSIGNMENT.pdf       ← exam assignment from the course
 │   ├── REPORT.md, REPORT.pdf     ← exam report (in Italian)
 │   └── screenshots/              ← images used in this README and in the report
 ├── README.md
@@ -207,7 +207,7 @@ overseas-student-management/
 ## Known limitations and future work
 
 - Some features exist only as API endpoints, with no screen: student registration (`POST /auth/register`), creating lecturer and office accounts (`POST /auth/staff`) and managing partner universities (`POST`, `PUT`, `DELETE /institutions`).
-- The brief lists a "cancelled" status, but there isn't one. An application can't be withdrawn or deleted.
+- The exam assignment lists a "cancelled" status, but there isn't one. An application can't be withdrawn or deleted.
 - Socket.IO connections aren't authenticated. Any client can join the room of any application and receives the `applications-changed` event for every change. The events carry only ids, never data.
 - In the production stack, uploaded PDFs live inside the backend container with no volume, so they're lost when the container is recreated. The database has its own volume.
 - Views have no URL. Reloading the page always goes back to the list, and the browser's back button leaves the app.
@@ -221,12 +221,12 @@ What I would do next:
 - **Tests on the state machine.** Service tests against a throwaway PostgreSQL database, one for each allowed and forbidden transition, plus the rejected-change restore and the "all grades present" rule.
 - **One copy of the rules.** The demo currently repeats the service logic in `demo-db.ts`. I would move the transition table and the checks into a small shared TypeScript package used by both the backend and the demo, so the two can't drift apart.
 - **A volume for uploads** in `docker-compose.prod.yml`, or object storage, so documents survive a redeploy.
-- **Cancellation.** A `CANCELLED` state, which the brief lists among the statuses, reachable from the pre-departure states so a student can withdraw before leaving.
+- **Cancellation.** A `CANCELLED` state, which the exam assignment lists among the statuses, reachable from the pre-departure states so a student can withdraw before leaving.
 
 ## Credits and license
 
 - Design, backend, frontend and documentation: Tommaso Moro.
-- The [project brief](docs/PROJECT_BRIEF.pdf) comes from the Web Applications and Technologies course, Ca' Foscari University of Venice, a.y. 2025/2026.
+- The [exam assignment](https://github.com/tommasomoro8/overseas-student-management/blob/main/docs/EXAM_ASSIGNMENT.pdf) comes from the Web Applications and Technologies course, Ca' Foscari University of Venice, a.y. 2025/2026.
 
 The code is released under the [MIT License](LICENSE).
 
