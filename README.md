@@ -38,15 +38,16 @@ Angular 18, TypeScript, Node.js, Express, PostgreSQL, Socket.IO, JWT, Zod, Multe
 
 Ca' Foscari's Overseas programme lets students spend a semester or a year at a partner university outside Europe and have the exams they pass there recognised back home.
 
-Today the whole process runs over email between three parties: the student, the referent lecturer and the International Office. On top of that, every application goes through several steps before, during and after the stay abroad:
+Today the whole process runs over email between three parties: the student, the referent lecturer and the International Office.
+On top of that, every application goes through several steps:
 
 - **Before departure:** the student uploads a Learning Agreement listing the exams they plan to take abroad and the Ca' Foscari exams they replace. The lecturer approves it, then the International Office checks it.
 - **During the stay:** the student records the actual arrival and return dates and can propose changes to the exam plan, which the lecturer approves or rejects.
 - **After returning:** the student uploads the Transcript of Records with the grades, the lecturer approves the exams and the International Office closes the application.
 
-With documents and approvals scattered across email threads, it only takes a moment for a file to get lost or a deadline to be missed. The university needs a single application that manages the whole process.
+With documents and approvals scattered across email threads, it's easy for a file to get lost or a deadline to be missed. The university needs an application that manages the whole process.
 
-This is the brief the Web Applications and Technologies professor chose for the 2025/2026 academic year: a concrete problem that actually needs solving, which I tackled as my individual exam project. The [exam assignment](https://github.com/tommasomoro8/overseas-student-management/blob/main/docs/EXAM_ASSIGNMENT.pdf) asked for it as a REST backend in Node.js with Express, an Angular single-page app, and each component in its own Docker container.
+This is the brief the Web Applications and Technologies professor chose for the 2025/2026 academic year: a concrete problem that actually needs solving, which I tackled as my individual exam project. The [exam assignment](https://github.com/tommasomoro8/overseas-student-management/blob/main/docs/EXAM_ASSIGNMENT.pdf) asked for it as a single-page application in Angular, with a REST backend in Node.js with Express, with each component in its own Docker container.
 
 ## The solution
 
