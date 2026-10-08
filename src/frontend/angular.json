@@ -80,6 +80,21 @@
               "optimization": false,
               "extractLicenses": false,
               "sourceMap": true
+            },
+            "demo": {
+              "outputPath": "dist/demo",
+              "outputHashing": "none",
+              "extractLicenses": false,
+              "fileReplacements": [
+                {
+                  "replace": "src/app/app.config.ts",
+                  "with": "src/demo/app.config.demo.ts"
+                },
+                {
+                  "replace": "src/app/features/login.component.ts",
+                  "with": "src/demo/login.component.demo.ts"
+                }
+              ]
             }
           },
           "defaultConfiguration": "production"
