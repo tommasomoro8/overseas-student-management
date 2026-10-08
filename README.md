@@ -1,13 +1,13 @@
 # Overseas Mobility
 
-A full-stack web app that tracks a Ca' Foscari student's study period at a partner university abroad, from the learning agreement to exam recognition, for the student, the referent lecturer and the international office.
+A full-stack web app designed to manage Ca' Foscari study abroad programs. It tracks the entire process connecting students, academic coordinators, and the International Office.
 
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 ![TypeScript](https://img.shields.io/badge/language-TypeScript-3178c6)
 
 ![Student view: "Le mie applications" page with three applications, each showing its status (upload the Learning Agreement, waiting for the lecturer, no action needed), phase, host university and referent lecturer, plus the "Nuova application" button](docs/screenshots/cover.png)
 
-**Live demo:** https://tommasomoro8.github.io/overseas-student-management/demo.html <!-- TODO: enable GitHub Pages (Settings → Pages → branch main, folder /docs) so this link works -->
+**Live demo:** https://tommasomoro8.github.io/overseas-student-management/demo.html
 
 <!-- portfolio:summary
 ## The problem
