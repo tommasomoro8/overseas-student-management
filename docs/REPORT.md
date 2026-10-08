@@ -637,36 +637,36 @@ I passaggi sono illustrati con screenshot dell'applicazione in esecuzione, ripro
 ### 6.1 Studente
 
 1. **Login** e atterraggio su *"Le mie applications"*.
-   ![Lista delle application dello studente](report-imgs/student-list.png)
+   ![Lista delle application dello studente](screenshots/student-list.png)
 2. **Nuova application**: sceglie istituzione ospitante, docente referente, anno accademico e periodo → la domanda nasce in stato `DRAFT`.
-   ![Wizard di creazione di una nuova application](report-imgs/student-newapplication.png)
+   ![Wizard di creazione di una nuova application](screenshots/student-newapplication.png)
 3. **Invio Learning Agreement**: carica il PDF e compila il **mapping esami** (estero ↔ Ca' Foscari) → stato `LA_SUBMITTED`.
-   ![Richiesta del learning agreement](report-imgs/student-la1.png)
-   ![Compilazione del mapping esami estero ↔ Ca' Foscari](report-imgs/student-la2.png)
+   ![Richiesta del learning agreement](screenshots/student-la1.png)
+   ![Compilazione del mapping esami estero ↔ Ca' Foscari](screenshots/student-la2.png)
 4. Dopo l'approvazione del docente e la verifica dell'ufficio, **inserisce le date** di arrivo/rientro → la mobilità parte (`MOBILITY_IN_PROGRESS`).
-   ![Modale di invio delle date](report-imgs/student-date.png)
+   ![Modale di invio delle date](screenshots/student-date.png)
 5. **Propone una modifica** al piano esami durante la mobilità (`LA_CHANGE_SUBMITTED`). (Opzionale)
 6. Al rientro **carica il Transcript of Records** con voti e date di tutti gli esami → `TOR_SUBMITTED`.
-   ![Caricamento del Transcript of Records con voti e date](report-imgs/student-tor.png)
+   ![Caricamento del Transcript of Records con voti e date](screenshots/student-tor.png)
 
 ### 6.2 Docente referente
 
 1. **Login** → *"Applications da seguire"*, con il numero di pratiche che richiedono la sua valutazione.
-   ![Lista delle application da seguire del docente](report-imgs/lecturer-list.png)
+   ![Lista delle application da seguire del docente](screenshots/lecturer-list.png)
 2. **Valuta il Learning Agreement**: apre la pratica, scarica il PDF, controlla il mapping e **approva** o **rifiuta** (con motivazione obbligatoria in caso di rifiuto).
-   ![Modale di valutazione del Learning Agreement](report-imgs/lecturer-la.png)
+   ![Modale di valutazione del Learning Agreement](screenshots/lecturer-la.png)
 3. **Valuta le modifiche** proposte durante la mobilità (il rifiuto ripristina automaticamente la versione precedente del piano).
 4. **Approva il Transcript**: verifica voti e date e chiude la fase esami (`TOR_APPROVED`).
-   ![Valutazione del Transcript of Records](report-imgs/lecturer-tor.png)
+   ![Valutazione del Transcript of Records](screenshots/lecturer-tor.png)
 
 ### 6.3 Ufficio (office)
 
 1. **Login** → *"Tutte le applications"* con statistiche e filtri per stato.
-   ![Lista ufficio con statistiche e filtri](report-imgs/office-list.png)
+   ![Lista ufficio con statistiche e filtri](screenshots/cover.png)
 2. **Verifica la pre-partenza** per le domande con LA approvato (`LA_APPROVED → PRE_DEPARTURE_APPROVED`).
-   ![Verifica della pre-partenza](report-imgs/office-verify.png)
+   ![Verifica della pre-partenza](screenshots/office-verify.png)
 3. **Chiude la pratica** quando il Transcript è approvato (`TOR_APPROVED → CLOSED`).
-   ![Chiusura della pratica](report-imgs/office-close.png)
+   ![Chiusura della pratica](screenshots/office-close.png)
 
 > **Realtime in azione:** quando due client hanno la stessa pratica aperta in due finestre, l'azione compiuta da uno aggiorna automaticamente la vista dell'altro grazie alle notifiche Socket.IO.
 
@@ -691,7 +691,7 @@ Ogni proposta dell'AI è stata **verificata e testata** manualmente (es. con Pos
 ### Appendice — Come eseguire il progetto
 
 ```bash
-# Dalla root del progetto
+# Dalla cartella src/ del progetto (cd src)
 
 # --- Sviluppo (hot-reload, dev-server Angular con proxy /api) ---
 docker-compose up --build      # avvia database, backend, frontend
