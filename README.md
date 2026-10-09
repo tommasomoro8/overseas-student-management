@@ -100,41 +100,19 @@ The interface is in Italian. The [demo](https://tommasomoro8.github.io/overseas-
 
 ```mermaid
 flowchart LR
-    subgraph SPA["Angular SPA"]
-        Login["Login"]
-        Lists["Role lists<br/>student · lecturer · office"]
-        Create["Create wizard"]
-        Detail["Application detail<br/>action panel + modals"]
-        Auth["AuthService"]
-        Store["StoreService"]
-        Api["ApiService"]
-        RT["RealtimeService"]
-    end
-
-    subgraph API["Express backend"]
-        MW["Routes + middlewares<br/>authenticate · authorize · validate · upload"]
-        Ctrl["Controllers"]
-        Svc["Services<br/>state machine · access checks"]
-        Models["Models<br/>parameterised SQL"]
-        Notify["realtimeNotifier"]
-        IO["Socket.IO"]
-    end
-
+    Users(["Student · Lecturer · Office"])
+    SPA["Angular SPA<br/>one view per role"]
+    API["Express REST API<br/>auth · state machine · uploads"]
+    IO["Socket.IO<br/>change notifications"]
     PG[("PostgreSQL")]
-    FS[["uploads/*.pdf"]]
+    FS[["PDF documents"]]
 
-    Login --> Auth
-    Lists & Create & Detail -->|"loads · actions"| Store
-    Store --> Api
-    Auth -->|"login · /auth/me"| MW
-    Api -->|"HTTP + JWT"| MW
-    MW --> Ctrl --> Svc --> Models --> PG
-    MW -->|"Multer saves the PDF"| FS
-    Ctrl -->|"reads PDFs for download"| FS
-    Ctrl -.->|"2xx response to a write on /applications"| Notify --> IO
-    Store -->|"join / leave room"| RT
-    RT <-->|WebSocket| IO
-    RT -.->|"application changed: reload"| Store
+    Users --> SPA
+    SPA -->|"HTTP + JWT"| API
+    API --> PG
+    API --> FS
+    API -.->|"application changed"| IO
+    IO <-.->|"WebSocket: reload"| SPA
 ```
 
 - **Layers in the backend.** Routes chain the middlewares and the controller for each endpoint. Controllers read the request and shape the response. Services hold the rules: who can do what and which transition is allowed. Models are the only code that talks to PostgreSQL, always with parameterised queries. Access checks such as "only the referent lecturer" are written once in the application service and reused by the Learning Agreement and Transcript services.
