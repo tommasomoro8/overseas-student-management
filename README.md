@@ -1,4 +1,4 @@
-# Overseas Mobility
+# University Study Abroad Manager
 
 A full-stack web app designed to manage Ca' Foscari study abroad programs. It tracks the entire process connecting students, academic coordinators, and the International Office.
 
@@ -11,7 +11,7 @@ A full-stack web app designed to manage Ca' Foscari study abroad programs. It tr
 
 <!-- portfolio:summary
 ## The problem
-Ca' Foscari's Overseas programme sends students to partner universities outside Europe, and each stay needs a learning agreement, approvals, plan changes and exam recognition shared by student, lecturer and office. My Web Applications and Technologies exam asked for an app to manage it.
+Ca' Foscari's Overseas programme sends students to partner universities outside Europe, and each stay needs a learning agreement, approvals, plan changes and exam recognition shared by student, lecturer and office, all of it currently handled through email threads. My Web Applications and Technologies exam asked for an app to manage it.
 
 ## The solution
 A web app with one view per role, driven by an 11-state workflow. Students create applications and upload PDFs with their exam plan and grades, and lecturers approve or reject them with a reason. The office checks the pre-departure phase and closes the file.
@@ -19,7 +19,7 @@ A web app with one view per role, driven by an 11-state workflow. Students creat
 ## Technical challenges
 - Every state change is checked against a table of allowed transitions, inside a transaction that locks the row.
 - Each learning agreement version keeps its own exam plan, so rejecting a change reactivates the previous one.
-- Socket.IO only says which application changed, and the client reloads it over HTTP.
+- Socket.IO only says which application changed, and the client reloads it over HTTP, so the REST API stays the single source of truth.
 
 ## What I learned
 - Documenting a project properly: ER diagram, state machine, API reference and walkthroughs.

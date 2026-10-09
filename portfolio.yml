@@ -1,4 +1,4 @@
-title: "Overseas Mobility"
+title: "University Study Abroad Manager"
 slug: "overseas-mobility"
 category: "uni"          # uni | school | pers | comm
 year: 2026
@@ -7,7 +7,7 @@ status: "completed"      # completed | in progress | archived
 role: "solo"             # e.g. "solo", "team of 4, backend"
 cover: docs/screenshots/cover.png
 demo: "https://tommasomoro8.github.io/overseas-student-management/demo.html"
-note: "Interface in Italian. The demo runs in the browser with sample data that resets on reload."
+note: "The demo runs in the browser with sample data that resets on reload. Interface in Italian."
 press: []
 screenshots:
   - path: docs/screenshots/cover.png
