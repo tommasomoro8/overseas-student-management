@@ -54,7 +54,7 @@ This is the brief the Web Applications and Technologies professor chose for the 
 After login, each role lands on its own list of applications. Every row shows the phase and what the current user has to do next, such as "Carica il Learning Agreement" (upload the Learning Agreement) or "Valuta la modifica proposta" (evaluate the proposed change).
 
 - **Students** create an application by choosing academic year, host university, expected period and referent lecturer. They upload the Learning Agreement PDF together with the exam mapping, enter mobility dates, propose changes and upload the Transcript with a grade and date for every exam.
-- **Referent lecturers** see only the applications they follow. They download the PDF, check the mapping and approve or reject. A rejection needs a reason.
+- **Referent lecturers** see only the applications they follow. They download the PDF, check the mapping and approve or reject.
 - **The office** sees every application, with counters and status filters. It confirms the pre-departure check and closes applications whose exams have been approved.
 
 The detail page of an application shows a timeline of every step with who did it and when, all versions of each document with their outcome, and the history of proposed changes. If two people have the same application open, an action by one refreshes the other's page.
@@ -65,20 +65,22 @@ The detail page of an application shows a timeline of every step with who did it
 
 ![Lecturer view: "Applications da seguire" page filtered on "Da gestire", with two applications waiting for the Learning Agreement evaluation](docs/screenshots/lecturer-list.png)
 
-The interface is in Italian. The [demo](https://tommasomoro8.github.io/overseas-student-management/demo.html) runs the same Angular app in the browser with an in-memory copy of the backend logic. Instead of the login it shows three buttons, one per role, with sample applications already in every state. Reloading the page resets the data.
+The interface is in Italian. The [demo](https://tommasomoro8.github.io/overseas-student-management/demo.html) runs the same Angular app entirely in the browser, with an in-memory copy of the backend logic instead of a real server and database, so reloading the page resets the data.
 
 ## Technical challenges
 
+- **An interface that answers “what do I do now?”.** The goal was to make an application’s flow simple, so that students and lecturers find everything they need at a glance, without the frustration administrative portals often cause. Every application carries a colour-coded badge with the next step for the current user: orange when it’s their turn to act (“Carica il Learning Agreement”), blue when they’re waiting on someone else (“Attendi la valutazione del docente”), green when everything is in order. In the detail page, a timeline shows which steps are done, which one is current and how many are left.
 - **A workflow that can't be skipped.** An application moves through 11 states, from `DRAFT` to `CLOSED`. The allowed transitions are listed in one table (`ALLOWED_TRANSITIONS`), and every action checks against it and answers `409` if the move isn't allowed. The check runs inside a transaction that first locks the row with `SELECT … FOR UPDATE`, so two concurrent requests can't both move the same application.
 - **Versioned documents and undoing a rejected change.** Every upload of a Learning Agreement or Transcript is a new version, and a partial unique index allows only one active version per application. The exam mapping is stored per Learning Agreement version, not per application. When the lecturer rejects a change proposed during the stay, the backend deactivates the new version and reactivates the previous one, and the old plan comes back with it. Nothing is copied or deleted.
-- **Complete grades before approval.** The Transcript upload must include a grade and date for exactly the exams in the active mapping, no more and no fewer. The lecturer can't approve it while any exam is missing a grade, and only then can the office close the application.
 - **Real-time updates without duplicating the API.** One Express middleware watches every successful write under `/applications` and emits events through Socket.IO: one to the room of the application that changed, and one to every other connected client so their list reloads. The events carry at most an id, and the client reloads the data over HTTP. The author of the action is excluded through an `X-Socket-Id` header, so their page doesn't reload twice. The controllers know nothing about it.
 
 ## What I learned
 
 - Writing proper documentation for a project. The [report](https://github.com/tommasomoro8/overseas-student-management/blob/main/docs/REPORT.pdf) (in Italian) covers the architecture, ER diagram, state machine, every endpoint with JSON examples, the authentication flow and a walkthrough per role.
 - Containerising three services with Docker Compose. Each Dockerfile has a development target with hot reload and a production target. In production Nginx serves the compiled app and forwards `/api` and `/socket.io` to the backend, so the browser only ever talks to one origin.
-- Angular 18 with standalone components, signals and the new `@if`/`@for` syntax, plus TypeScript on both ends: the frontend has a type for every API response (`api.types.ts`).
+- TypeScript on both ends: the frontend has a type for every API response (api.types.ts), so a change in the API shows up as a compile error instead of a bug at runtime.
+- Structuring a backend with an MVC-style layered architecture: routes, controllers, services and models, each with a single job.
+- Angular 18 with standalone components, signals and the new @if/@for syntax.
 
 ## Stack
 
@@ -140,7 +142,6 @@ flowchart LR
 - **Stateless authentication.** Login returns a JWT signed with `JWT_SECRET`. The Angular app stores it in `localStorage` and an interceptor adds it to every request. On a `401` during a session it logs the user out.
 - **Navigation through the store.** The app has three views (list, create, detail). Instead of `@angular/router`, a signal in `StoreService` holds the current view and the root component switches on it and on the user's role.
 - **One origin in every environment.** In development the Angular dev server proxies `/api` and `/socket.io` to the backend (`proxy.conf.js`). In production Nginx does the same (`nginx.conf`). The app always uses relative URLs.
-- **The demo.** The `demo` build configuration swaps two files: the app config adds an interceptor that answers every `/api/v1` call from an in-memory port of the services (`src/frontend/src/demo/`), and the login becomes the account picker. A script inlines the result into the single file `docs/demo.html`.
 
 ## Running locally
 
@@ -170,10 +171,6 @@ The backend creates the database schema at startup and, with `SEED=true`, adds t
 | Office | `office@unive.it` |
 
 **Configuration.** The Compose files set every variable. To run the backend outside Docker, copy `src/backend/.env.example` to `src/backend/.env` and point `DB_HOST` to a PostgreSQL 16 instance. Then run `npm install` and `npm run dev` in `src/backend` and `npm start` in `src/frontend`. In production set your own `JWT_SECRET`: the backend refuses to start without one when `NODE_ENV=production`.
-
-**Dev container.** Opening `src/` in VS Code offers to reopen it inside the backend container (`src/.devcontainer/`).
-
-**Rebuilding the demo.** From `src/frontend`, `npm run build:demo` builds the demo configuration and writes `docs/demo.html`.
 
 There are no automated tests.
 
