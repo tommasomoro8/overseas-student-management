@@ -1,4 +1,4 @@
-# University Study Abroad Manager
+# Study Abroad Manager
 
 A full-stack web app designed to manage Ca' Foscari study abroad programs. It tracks the entire process connecting students, academic coordinators, and the International Office.
 
